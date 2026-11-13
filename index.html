@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Conejos vs Vegetales">
+<meta name="theme-color" content="#0c1a0c">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<title>Conejos vs Vegetales</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap">
+<style>
+  html,body{margin:0;height:100%;height:100dvh;background:#0c1a0c;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  canvas{width:min(100vw,calc(100dvh*1620/971));height:auto;aspect-ratio:1620/971;display:block;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer}
+  #fs{position:fixed;right:10px;bottom:10px;width:48px;height:48px;border-radius:14px;border:2px solid rgba(255,215,130,.7);background:rgba(54,34,14,.78);color:#fff4d6;font-size:26px;line-height:1;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;padding:0;-webkit-tap-highlight-color:transparent}
+  #ios{position:fixed;inset:0;background:rgba(10,20,10,.88);z-index:9;display:none;align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+  #ios div{max-width:460px;background:#2d4a1d;border:3px solid #ffd96a;border-radius:20px;padding:20px 22px;color:#fff4d6;font:500 18px/1.45 Fredoka,system-ui,sans-serif;text-align:center}
+  #ios b{color:#ffd96a} #ios button{margin-top:12px;font:700 18px Fredoka,system-ui;padding:8px 26px;border-radius:12px;border:0;background:#ffd96a;color:#3a2205}
+  #fs:active{transform:scale(.94)}
+</style>
+</head>
+<body>
+<canvas id="c" width="1620" height="971"></canvas>
+<div id="ios"><div>📱 <b>Pantalla completa en iPhone</b><br>Safari no permite pantalla completa dentro de una página. Para jugar a pantalla completa:<br>1) Abre el juego en <b>Safari</b> desde tu propia web.<br>2) Toca <b>Compartir ⬆️</b> → <b>«Añadir a pantalla de inicio»</b>.<br>3) Abre el juego desde el ícono y gira el teléfono en horizontal.<br><button id="iosx">Entendido</button></div></div>
+<button id="fs" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶</button>
+<script>
+'use strict';
+/* ============================================================
+   CONEJOS vs VEGETALES  ·  modo Defiende el Huerto
+   ============================================================ */
+const A={"wire":[0,0,170,161,85.0,80.5],"martillazo_12":[173,0,107,146,48.0,137.0],"esquimal_08":[283,0,114,143,51.0,133.0],"esquimal_06":[400,0,117,142,46.0,133.0],"martillazo_00":[520,0,126,141,64.0,125.0],"esquimal_01":[649,0,102,138,45.0,128.0],"martillazo_03":[754,0,107,137,43.0,125.0],"esquimal_00":[864,0,104,136,44.0,125.7],"martillazo_06":[971,0,105,136,43.0,121.0],"esquimal_12":[1079,0,104,135,49.0,125.0],"granjero_00":[1186,0,102,135,49.0,125.0],"martillazo_01":[1291,0,166,135,52.0,120.0],"martillazo_04":[1460,0,121,135,49.0,122.0],"martillazo_07":[1584,0,131,135,51.0,123.0],"esquimal_02":[1718,0,105,133,43.0,123.0],"granjero_01":[1826,0,90,133,46.0,124.0],"granjero_02":[1919,0,90,133,47.0,123.0],"granjero_04":[0,164,100,133,53.0,124.0],"martillazo_13":[103,164,146,133,46.0,116.0],"esquimal_07":[252,164,125,132,54.0,123.0],"granjero_03":[380,164,93,132,47.0,125.0],"martillazo_14":[476,164,99,132,52.0,123.0],"resortero_14":[578,164,86,132,44.0,123.0],"esquimal_03":[667,164,102,131,53.0,121.0],"esquimal_04":[772,164,114,131,47.0,120.0],"granjero_06":[889,164,93,131,47.0,120.0],"granjero_07":[985,164,105,131,53.0,120.0],"granjero_05":[1093,164,91,130,47.0,118.0],"granjero_08":[1187,164,94,130,40.0,121.6],"granjero_09":[1284,164,122,130,47.0,118.0],"granjero_10":[1409,164,114,130,55.0,120.0],"lanzazanahorias_15":[1526,164,88,130,45.0,116.0],"resortero_00":[1617,164,123,130,57.0,116.0],"resortero_09":[1743,164,109,130,44.0,114.0],"resortero_15":[1855,164,86,130,38.0,121.0],"martillazo_11":[0,300,107,129,44.0,118.0],"resortero_03":[110,300,116,129,47.0,117.0],"resortero_07":[229,300,105,129,45.0,113.0],"martillazo_02":[337,300,126,128,42.0,116.0],"resortero_06":[466,300,109,128,45.0,115.4],"resortero_08":[578,300,109,128,46.0,112.0],"granjero_14":[690,300,71,127,35.0,119.0],"resortero_01":[764,300,117,127,50.0,115.0],"resortero_04":[884,300,96,127,40.0,120.0],"granjero_12":[983,300,75,126,38.0,114.0],"resortero_13":[1061,300,94,126,48.0,116.0],"granjero_16":[1158,300,71,125,35.0,116.0],"resortero_17":[1232,300,120,125,66.0,113.0],"esquimal_13":[1355,300,119,124,64.0,119.0],"granjero_13":[1477,300,81,124,28.0,114.0],"lanzazanahorias_01":[1561,300,80,124,43.0,112.0],"martillazo_15":[1644,300,130,123,68.0,110.0],"lanzazanahorias_02":[1777,300,80,122,43.0,110.0],"lanzazanahorias_03":[1860,300,79,122,40.0,111.0],"lanzazanahorias_04":[1942,300,79,122,43.0,111.0],"lanzazanahorias_05":[0,432,81,122,41.0,111.0],"lanzazanahorias_10":[84,432,104,122,41.0,110.0],"resortero_02":[191,432,117,122,52.0,116.0],"resortero_10":[311,432,114,122,43.0,110.0],"lanzazanahorias_13":[428,432,73,121,35.0,112.0],"martillazo_08":[504,432,122,121,40.0,110.0],"resortero_05":[629,432,115,121,49.0,113.0],"lanzazanahorias_09":[747,432,102,120,44.0,110.0],"martillazo_05":[852,432,135,120,56.0,107.0],"huevo_02":[990,432,78,119,41.0,101.0],"huevo_06":[1071,432,80,119,42.0,105.0],"jaula_06":[1154,432,99,119,50.0,108.0],"jaula_07":[1256,432,94,119,47.0,108.0],"lanzazanahorias_07":[1353,432,96,118,46.0,110.0],"resortero_16":[1452,432,104,118,55.0,108.0],"huevo_05":[1559,432,80,117,41.0,101.0],"jaula_03":[1642,432,98,117,49.0,105.0],"jaula_05":[1743,432,100,117,51.0,105.0],"lanzazanahorias_08":[1846,432,104,117,44.0,109.0],"sargento_00":[0,557,104,117,45.0,109.0],"sargento_04":[107,557,121,117,49.0,106.0],"sargento_08":[231,557,129,117,57.0,107.0],"jaula_01":[363,557,96,116,46.0,104.0],"jaula_02":[462,557,95,116,46.0,105.0],"jaula_00":[560,557,98,115,48.0,104.0],"jaula_08":[661,557,104,115,50.0,103.0],"sargento_01":[768,557,107,115,44.0,105.0],"huevo_03":[878,557,86,114,44.0,98.0],"huevo_04":[967,557,86,114,44.0,101.0],"huevo_07":[1056,557,76,114,38.0,103.0],"jaula_04":[1135,557,98,114,48.0,103.0],"lanzazanahorias_14":[1236,557,78,114,40.0,107.0],"sargento_02":[1317,557,112,114,45.0,104.0],"sargento_03":[1432,557,117,114,49.0,104.0],"sargento_05":[1552,557,117,114,45.0,104.0],"sargento_07":[1672,557,217,114,63.0,102.0],"brocoli_05":[0,677,156,113,81.0,104.0],"huevo_00":[159,677,85,112,44.0,97.0],"huevo_10":[247,677,228,112,114.0,56.0],"martillazo_09":[478,677,138,112,53.0,96.0],"sargento_12":[619,677,73,112,35.0,100.0],"huevo_08":[695,677,79,111,39.0,103.0],"sargento_06":[777,677,114,110,44.0,100.0],"sargento_14":[894,677,69,110,33.0,98.0],"sargento_15":[966,677,117,109,59.0,99.0],"zapallo_09":[1086,677,135,109,66.0,96.0],"esquimal_11":[1224,677,140,108,70.0,54.0],"choclo_10":[1367,677,100,107,55.0,97.0],"brocoli_04":[1470,677,192,106,90.0,96.0],"huevo_01":[1665,677,90,105,43.0,99.0],"sargento_13":[1758,677,114,105,70.0,96.0],"huevo_09":[1875,677,104,104,52.0,52.0],"martillazo_10":[0,793,125,104,63.0,97.0],"papa_03":[128,793,88,104,45.0,90.0],"zapallo_01":[219,793,169,104,93.0,94.0],"zapallo_08":[391,793,156,104,79.0,93.0],"zapallo_13":[550,793,125,104,66.0,91.0],"brocoli_02":[678,793,135,103,71.0,82.0],"papa_07":[816,793,104,103,58.0,84.0],"lanzazanahorias_16":[923,793,81,102,39.0,95.0],"choclo_11":[1007,793,86,100,43.0,86.0],"sargento_10":[1096,793,67,100,32.0,85.0],"choclo_08":[1166,793,142,99,97.0,80.0],"choclo_09":[1311,793,104,99,59.0,88.0],"zapallo_12":[1418,793,135,99,67.0,86.0],"choclo_13":[1556,793,102,98,54.0,89.0],"brocoli_06":[1661,793,119,97,64.0,85.0],"papa_12":[1783,793,94,97,49.0,82.0],"choclo_16":[1880,793,99,96,52.0,85.0],"papa_04":[0,900,100,96,49.0,87.0],"sargento_11":[103,900,130,96,59.0,83.0],"zapallo_05":[236,900,124,96,57.0,87.0],"zapallo_06":[363,900,114,96,55.0,87.0],"zapallo_10":[480,900,122,96,64.0,84.0],"zapallo_11":[605,900,116,96,58.0,83.0],"brocoli_07":[724,900,123,95,67.0,83.0],"choclo_07":[850,900,93,95,49.0,86.0],"papa_13":[946,900,88,95,44.0,79.2],"zapallo_07":[1037,900,170,95,78.0,84.0],"brocoli_09":[1210,900,116,94,72.0,82.0],"brocoli_11":[1329,900,114,94,74.0,81.0],"choclo_15":[1446,900,85,94,40.0,85.0],"choclo_12":[1534,900,78,93,35.0,84.0],"choclo_14":[1615,900,83,93,39.0,86.0],"papa_11":[1701,900,95,93,48.0,80.0],"choclo_02":[1799,900,105,92,58.0,84.0],"choclo_17":[1907,900,96,92,51.0,82.0],"esquimal_09":[0,999,109,92,54.5,46.0],"zapallo_04":[112,999,148,92,72.0,85.0],"brocoli_08":[263,999,106,91,63.0,78.0],"brocoli_10":[372,999,100,91,64.0,78.0],"choclo_01":[475,999,96,91,50.0,82.0],"papa_14":[574,999,97,91,46.0,80.0],"zapallo_02":[674,999,154,91,77.0,45.5],"papa_06":[831,999,88,90,45.0,77.0],"papa_10":[922,999,88,90,41.0,78.0],"beterraga_11":[1013,999,62,89,34.0,78.0],"papa_05":[1078,999,80,88,42.5,74.0],"papa_09":[1161,999,73,87,35.0,76.0],"aji_13":[1237,999,60,86,32.0,76.0],"beterraga_12":[1300,999,69,86,30.0,73.0],"jaula_15":[1372,999,66,86,33.0,43.0],"tomate_03":[1441,999,136,86,67.0,78.0],"aji_11":[1580,999,74,85,36.0,77.0],"beterraga_07":[1657,999,63,85,34.0,72.0],"beterraga_09":[1723,999,66,85,34.0,73.0],"beterraga_10":[1792,999,62,85,32.0,75.0],"brocoli_12":[1857,999,114,85,72.0,75.0],"aji_08":[0,1094,81,84,35.0,74.0],"beterraga_13":[84,1094,68,84,33.0,74.0],"choclo_00":[155,1094,78,84,36.0,75.0],"jaula_18":[236,1094,157,84,78.5,42.0],"papa_01":[396,1094,153,84,69.0,73.0],"tomate_01":[552,1094,127,84,63.0,77.0],"aji_12":[682,1094,81,83,38.0,77.0],"beterraga_08":[766,1094,62,83,32.0,76.0],"beterraga_14":[831,1094,71,83,35.0,71.0],"brocoli_13":[905,1094,106,83,53.0,72.0],"papa_08":[1014,1094,78,83,38.0,72.0],"brocoli_01":[1095,1094,158,82,83.5,69.0],"aji_06":[1256,1094,91,79,38.0,69.0],"aji_07":[1350,1094,88,79,40.0,71.0],"aji_09":[1441,1094,66,79,30.0,69.0],"choclo_05":[1510,1094,81,79,43.0,72.0],"aji_00":[1594,1094,195,78,97.5,39.0],"aji_10":[1792,1094,67,78,30.0,68.0],"papa_00":[1862,1094,112,78,48.0,69.0],"papa_02":[0,1181,153,78,73.0,64.0],"tomate_06":[156,1181,81,78,37.0,70.0],"tomate_14":[240,1181,83,78,41.0,68.0],"aji_02":[326,1181,104,76,56.0,65.0],"aji_05":[433,1181,137,76,59.0,69.0],"cebolla_05":[573,1181,310,76,160.0,65.0],"tomate_13":[886,1181,84,76,43.0,67.0],"tomate_12":[973,1181,80,75,39.0,67.0],"beterraga_00":[1056,1181,66,74,34.0,67.0],"beterraga_06":[1125,1181,60,74,30.0,67.0],"jaula_12":[1188,1181,46,74,23.0,37.0],"tomate_11":[1237,1181,78,74,38.0,64.0],"brocoli_00":[1318,1181,131,73,64.0,62.0],"cebolla_04":[1452,1181,125,73,71.0,63.0],"cebolla_10":[1580,1181,62,73,30.0,63.0],"cebolla_12":[1645,1181,69,73,34.0,69.0],"tomate_02":[1717,1181,120,73,61.0,66.0],"tomate_07":[1840,1181,99,73,40.0,64.0],"tomate_10":[1942,1181,76,73,39.0,64.0],"beterraga_04":[0,1262,68,72,32.0,66.0],"beterraga_05":[71,1262,60,71,30.0,65.0],"cebolla_13":[134,1262,71,71,36.0,67.0],"cebolla_14":[208,1262,69,71,33.0,67.1],"jaula_17":[280,1262,48,71,24.0,35.5],"tomate_04":[331,1262,86,71,37.0,61.0],"tomate_09":[420,1262,81,71,39.0,63.0],"aji_03":[504,1262,104,69,51.0,59.0],"cebolla_09":[611,1262,102,69,69.0,65.0],"tomate_05":[716,1262,100,69,42.0,63.0],"tomate_08":[819,1262,89,69,40.0,62.0],"aji_04":[911,1262,109,68,45.0,59.0],"cebolla_07":[1023,1262,112,68,56.0,61.0],"cebolla_11":[1138,1262,67,68,33.0,63.0],"zapallo_00":[1208,1262,209,67,105.0,57.0],"cebolla_00":[1420,1262,150,66,55.0,59.0],"cebolla_01":[1573,1262,91,64,40.0,57.0],"cebolla_03":[1667,1262,132,64,68.0,56.0],"cebolla_06":[1802,1262,124,62,62.0,51.0],"cebolla_08":[1929,1262,68,62,31.0,55.0],"jaula_14":[0,1337,55,59,27.5,29.5],"huevo_12":[58,1337,40,58,20.0,29.0],"huevo_16":[101,1337,45,58,22.5,29.0],"granjero_11":[149,1337,55,57,27.5,28.5],"lechuga_09":[207,1337,86,57,41.0,44.0],"beterraga_03":[296,1337,66,55,35.0,48.0],"granjero_18":[365,1337,47,55,23.5,27.5],"jaula_19":[415,1337,66,55,33.0,27.5],"beterraga_02":[484,1337,86,53,37.0,43.0],"lanzazanahorias_06":[573,1337,78,52,39.0,26.0],"lanzazanahorias_12":[654,1337,71,52,35.5,26.0],"jaula_11":[728,1337,73,51,36.5,25.5],"lechuga_17":[804,1337,125,51,73.0,37.0],"lechuga_13":[932,1337,111,50,62.0,39.0],"lechuga_16":[1046,1337,145,50,77.0,39.0],"jaula_20":[1194,1337,156,48,78.0,24.0],"lechuga_06":[1353,1337,62,48,31.0,24.0],"lechuga_08":[1418,1337,81,48,42.0,40.0],"lechuga_10":[1502,1337,84,48,44.0,37.0],"lechuga_15":[1589,1337,122,48,57.0,39.0],"granjero_15":[1714,1337,44,47,22.0,23.5],"granjero_17":[1761,1337,42,47,21.0,23.5],"lechuga_14":[1806,1337,116,47,68.0,37.0],"lechuga_11":[1925,1337,114,46,63.0,35.0],"jaula_09":[0,1399,32,45,16.0,22.5],"jaula_16":[35,1399,37,44,18.5,22.0],"beterraga_01":[75,1399,62,42,29.0,33.0],"lechuga_12":[140,1399,122,42,74.0,32.0],"lanzazanahorias_11":[265,1399,57,38,28.5,19.0],"lechuga_02":[325,1399,49,37,24.5,18.5],"lechuga_05":[377,1399,35,37,17.5,18.5],"huevo_11":[415,1399,36,36,18.0,18.0],"jaula_21":[454,1399,143,36,71.5,18.0],"huevo_15":[600,1399,17,35,8.5,17.5],"tomate_00":[620,1399,128,35,64.0,17.5],"esquimal_10":[751,1399,33,33,16.5,16.5],"lechuga_03":[787,1399,43,33,21.5,16.5],"jaula_13":[833,1399,42,32,21.0,16.0],"lechuga_04":[878,1399,35,32,17.5,16.0],"lechuga_00":[916,1399,48,31,24.0,15.5],"jaula_10":[967,1399,40,30,20.0,15.0],"cebolla_02":[1010,1399,42,28,21.0,14.0],"esquimal_05":[1055,1399,31,28,15.5,14.0],"lechuga_01":[1089,1399,55,27,27.5,13.5],"jaula_22":[1147,1399,46,25,23.0,12.5],"choclo_06":[1196,1399,43,24,21.5,12.0],"lechuga_07":[1242,1399,105,24,43.0,15.0],"resortero_11":[1350,1399,30,24,15.0,12.0],"resortero_12":[1383,1399,36,24,18.0,12.0],"huevo_13":[1422,1399,17,22,8.5,11.0],"sargento_09":[1442,1399,66,19,33.0,9.5],"huevo_17":[1511,1399,9,17,4.5,8.5],"choclo_04":[1523,1399,28,12,14.0,6.0],"huevo_18":[1554,1399,31,12,15.5,6.0],"choclo_03":[1588,1399,21,11,10.5,5.5],"huevo_14":[1612,1399,24,11,12.0,5.5]};
+const W=1620,H=971;
+const GX0=307,CWID=144.6,COLS=9,ROWC=[238,370,502,634,766],RH=132,GTOP=172,FOOT=48,ROWS=5;
+const FONT='"Fredoka",system-ui,"Segoe UI",sans-serif';
+const C=document.getElementById('c'),g=C.getContext('2d');
+const IMG=new Image(),BGI=new Image();
+let loaded=0;
+IMG.onload=BGI.onload=()=>{loaded++};
+IMG.src='atlas.webp';BGI.src='bg.jpg';
+try{document.fonts.load('700 40px Fredoka');}catch(e){}
+
+const nm=(sp,i)=>sp+'_'+(i<10?'0'+i:i);
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rowY=r=>ROWC[r]+FOOT;
+const colX=c=>GX0+CWID*(c+.5);
+
+/* ---------- sprites ---------- */
+const TC=new Map();
+function tinted(name,col){
+  const k=name+'|'+col;let c=TC.get(k);if(c)return c;
+  const m=A[name];c=document.createElement('canvas');c.width=m[2];c.height=m[3];
+  const x=c.getContext('2d');x.drawImage(IMG,m[0],m[1],m[2],m[3],0,0,m[2],m[3]);
+  x.globalCompositeOperation='source-atop';x.fillStyle=col;x.fillRect(0,0,m[2],m[3]);
+  TC.set(k,c);return c;
+}
+function spr(name,x,y,sc,o){
+  const m=A[name];if(!m)return;o=o||{};
+  g.save();g.translate(x,y);
+  if(o.rot)g.rotate(o.rot);
+  if(o.a!==undefined)g.globalAlpha=o.a;
+  const w=m[2]*sc,h=m[3]*sc;
+  g.drawImage(IMG,m[0],m[1],m[2],m[3],-m[4]*sc,-m[5]*sc,w,h);
+  if(o.tint){g.globalAlpha=(o.a===undefined?1:o.a)*o.tint[1];g.drawImage(tinted(name,o.tint[0]),0,0,m[2],m[3],-m[4]*sc,-m[5]*sc,w,h);}
+  g.restore();
+}
+function shadow(x,y,r){g.fillStyle='rgba(0,20,0,.28)';g.beginPath();g.ellipse(x,y+2,r,r*.28,0,0,7);g.fill();}
+function txt(s,x,y,size,fill,align,stroke,weight){
+  g.font=(weight||700)+' '+size+'px '+FONT;g.textAlign=align||'center';g.textBaseline='middle';
+  if(stroke){g.lineWidth=Math.max(3,size/7);g.strokeStyle=stroke;g.lineJoin='round';g.strokeText(s,x,y);}
+  g.fillStyle=fill||'#fff';g.fillText(s,x,y);
+}
+function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+
+/* ---------- animación (máquina de estados por personaje) ---------- */
+function frameOf(def,e){
+  const an=def.anim[e.st]||def.anim.idle;const n=an.f.length;
+  let p=e.t*an.fps,fi=Math.floor(p),done=false;
+  if(an.loop===false){if(fi>=n){fi=n-1;done=true;}}else fi%=n;
+  return {name:nm(def.sp,an.f[fi]),fi,done,n,p};
+}
+function setState(e,st){e.st=st;e.t=0;e.ev=0;e.nextHit=undefined;}
+
+/* ---------- definiciones: conejos ---------- */
+const IDLE5=[0,1,2,3,4,3,2,1];
+const UD={
+  granjero:{name:'Conejo Granjero',sp:'granjero',cost:50,cd:7,hp:100,sc:1,
+    anim:{idle:{f:IDLE5,fps:8}}},
+  resortero:{name:'Resortero',sp:'resortero',cost:100,cd:5,hp:100,sc:1,rate:1.5,mz:[70,-86],
+    anim:{idle:{f:IDLE5,fps:8},attack:{f:[5,6,7,8,9,10],fps:14,loop:false}},
+    shots:[{at:5,kind:'stone'}]},
+  jaula:{name:'Jaula de Acero',sp:'jaula',cost:50,cd:12,hp:850,sc:1,
+    anim:{idle:{f:[0,1,2,3,4,5,6,7,8],fps:6}}},
+  lanza:{name:'Lanzazanahorias',sp:'lanzazanahorias',cost:150,cd:6,hp:100,sc:1,rate:2,mz:[62,-92],
+    anim:{idle:{f:[1,2,3,4,5,4,3,2],fps:8},attack:{f:[7,8,9,10],fps:11,loop:false}},
+    shots:[{at:3,kind:'carrot'}]},
+  sargento:{name:'Sargento Orejas',sp:'sargento',cost:200,cd:8,hp:100,sc:1,rate:2.5,mz:[98,-70],
+    anim:{idle:{f:[0,1,2,3,4,5,6,5,4,3,2,1],fps:8},attack:{f:[1,7,8,7,8,2],fps:10,loop:false}},
+    shots:[{at:1,kind:'bullet'},{at:3,kind:'bullet'}]},
+  huevo:{name:'Huevo de Pascua',sp:'huevo',cost:125,cd:25,hp:100,sc:1,
+    anim:{idle:{f:[0,1,2,3,4,5,6,7,8],fps:8}}},
+  martillazo:{name:'Don Martillazo',sp:'martillazo',cost:150,cd:12,hp:220,sc:1,range:5,
+    anim:{idle:{f:[0],fps:1},windup:{f:[1,2,3,4],fps:6,loop:false},throw:{f:[9],fps:4,loop:false},
+          rec:{f:[6,6,10,10,11],fps:3.2,loop:false}}},
+  esquimal:{name:'Conejo Esquimal',sp:'esquimal',cost:125,cd:7,hp:100,sc:1,rate:2.5,mz:[60,-80],
+    anim:{idle:{f:[0,1,2,1],fps:6},attack:{f:[3,4,6,7,8],fps:10,loop:false}},
+    shots:[{at:4,kind:'snow'}]},
+};
+const ORDER=['granjero','resortero','jaula','lanza','sargento','huevo','martillazo','esquimal'];
+const PJ={
+  stone:{sp:'resortero_11',sc:.6,v:620,dmg:20,arc:26},
+  carrot:{sp:'lanzazanahorias_12',sc:.55,v:540,dmg:42,arc:70,spin:10},
+  bullet:{sp:'sargento_09',sc:.7,v:1100,dmg:24,arc:0},
+  snow:{sp:'esquimal_10',sc:.8,v:520,dmg:15,arc:30,slow:3},
+};
+
+/* ---------- definiciones: vegetales infectados ---------- */
+const ED={
+  papa:{name:'Papa Moho',sp:'papa',hp:150,sp_:.17,hw:38,sc:1.2,reach:62,dmg:26,hitIdx:1,deathTime:1.6,
+    anim:{walk:{f:[5,6,7,8,9,10,11,12,13,14],fps:11},attack:{f:[4,3,4,5],fps:7},death:{f:[1,2,0],fps:5,loop:false},hurt:{f:[5],fps:1}}},
+  choclo:{name:'Choclo Metralla',sp:'choclo',hp:170,sp_:.15,hw:38,sc:1.25,reach:0,range:5.2,hitIdx:0,deathTime:1.2,
+    anim:{walk:{f:[5,7,10,11,12,14,15],fps:10},idle:{f:[7],fps:1},attack:{f:[2,1,9,8,9],fps:9,loop:false},death:{f:[0],fps:1,loop:false}}},
+  aji:{name:'Ají Corredor',sp:'aji',hp:90,sp_:.42,hw:36,sc:1.3,reach:58,dmg:30,hitIdx:1,deathTime:1.0,
+    anim:{walk:{f:[6,7,8,9,10,11,12,13],fps:16},dash:{f:[5,3,4],fps:14},attack:{f:[2,3,4],fps:8},death:{f:[2],fps:1,loop:false}}},
+  tomate:{name:'Tomate Reventón',sp:'tomate',hp:100,sp_:.22,hw:40,sc:1.4,reach:62,hitIdx:0,deathTime:.8,
+    anim:{walk:{f:[3,4,5,6,7,8,9,10,11,12,13],fps:14},ignite:{f:[1,13,1,13],fps:14},death:{f:[2],fps:1,loop:false}}},
+  beterraga:{name:'Beterraga Blindada',sp:'beterraga',hp:480,sp_:.13,hw:36,sc:1.3,reach:62,dmg:40,hitIdx:2,deathTime:1.6,armor:.55,
+    anim:{walk:{f:[4,5,6,7,8,9,10,11,12,13,14],fps:9},attack:{f:[3,4,5,6,7,8],fps:8},death:{f:[1,2],fps:3,loop:false}}},
+  cebolla:{name:'Cebolla Tóxica',sp:'cebolla',hp:300,sp_:.12,hw:36,sc:1.45,reach:60,hitIdx:0,deathTime:1.0,gasRange:1.8,
+    anim:{walk:{f:[9,10,11,12,13,14],fps:8},idle:{f:[9],fps:1},special:{f:[11,12,13,14,13,12,11],fps:9},death:{f:[8],fps:1,loop:false}}},
+  lechuga:{name:'Lechuga Espora',sp:'lechuga',hp:130,sp_:.2,hw:42,sc:1.4,reach:0,fly:true,range:3.6,hitIdx:0,deathTime:.9,
+    anim:{walk:{f:[8,9,10,13,14,15,16,17],fps:12},attack:{f:[15,16,17,16],fps:9},death:{f:[9],fps:1,loop:false}}},
+  brocoli:{name:'Brócoli Titán',sp:'brocoli',hp:1100,sp_:.09,hw:58,sc:1.5,reach:90,dmg:55,hitIdx:2,deathTime:1.8,
+    anim:{walk:{f:[8,9,10,11,12,13],fps:7},attack:{f:[6,7,4,5],fps:6},special:{f:[5,4,5,4],fps:6},death:{f:[1,0],fps:2.5,loop:false}}},
+  zapallo:{name:'Rey Zapallo',sp:'zapallo',hp:3600,sp_:.045,hw:90,sc:2.0,reach:150,hitIdx:0,deathTime:3,boss:true,
+    anim:{walk:{f:[5,6,8,9,10,11,12,13],fps:6},attack:{f:[4],fps:4,loop:false},spores:{f:[7],fps:4,loop:false},summon:{f:[2],fps:4,loop:false},death:{f:[0],fps:1,loop:false}}},
+};
+
+/* ---------- estado ---------- */
+let S='loading',units,enemies,projs,toks,fxs,wire,grid,carrots,sel,cds,shakeT,banner,bannerT,kills,lockUntil=0,hint=0;
+let TG=0,WV; // tiempo de partida y oleadas
+let mouse={x:0,y:0};
+
+function reset(){
+  S='play';units=[];enemies=[];projs=[];toks=[];fxs=[];sel=null;kills=0;shakeT=0;hint=8;
+  grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));
+  carrots=150;cds=ORDER.map(()=>0);
+  wire=Array.from({length:ROWS},()=>({st:'idle',x:222,rot:0,hit:new Set()}));
+  TG=0;WV={next:15,big:[false,false],boss:false,bossRef:null,lastRow:-1,skyT:3,q:[]};
+  banner='';bannerT=0;
+}
+
+/* ---------- utilidades de juego ---------- */
+function say(t,s){banner=t;bannerT=s||2.6;}
+function pushFx(o){o.t=0;fxs.push(o);}
+function ring(x,y,r,col,life){pushFx({k:'ring',x,y,r,col,life:life||.4});}
+function puff(x,y,n,col,spread){for(let i=0;i<n;i++)pushFx({k:'puff',x:x+rnd(-spread,spread),y:y+rnd(-spread*.4,spread*.4),vx:rnd(-40,40),vy:rnd(-60,-10),r:rnd(8,18),col,life:rnd(.35,.7)});}
+function sparks(x,y,n,col){for(let i=0;i<n;i++){const a=rnd(0,6.28),v=rnd(120,320);pushFx({k:'spark',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,col,life:rnd(.25,.5)});}}
+function spriteFx(name,x,y,s0,s1,life,rot){pushFx({k:'sprite',name,x,y,s0,s1,life,rot:rot||0});}
+function shake(t){shakeT=Math.max(shakeT,t);}
+
+function dmgUnit(u,amt,fromE){
+  if(u.dying)return;u.hp-=amt;u.hitT=.12;u.shake=.15;
+  if(u.k==='jaula')sparks(u.x+rnd(-30,30),u.y-60,4,'#d9e4ff');
+  if(u.hp<=0)killUnit(u);
+}
+function killUnit(u){
+  u.dying=true;u.dt=0;grid[u.row][u.col]=null;
+  if(u.k==='jaula'){
+    for(let i=9;i<=22;i++){if(A[nm('jaula',i)]&&Math.random()<.8)pushFx({k:'debris',name:nm('jaula',i),x:u.x+rnd(-30,30),y:u.y-rnd(30,90),vx:rnd(-120,120),vy:rnd(-260,-60),rot:rnd(-3,3),life:1.2});}
+    sparks(u.x,u.y-60,14,'#c9d6ff');puff(u.x,u.y-20,6,'rgba(190,190,200,',30);
+  }else puff(u.x,u.y-30,5,'rgba(255,255,255,',24);
+}
+function dmgEnemy(e,amt,front,slow){
+  if(e.dead)return;const d=ED[e.k];
+  if(d.armor&&front)amt*=d.armor;
+  e.hp-=amt;e.hitT=.12;if(slow)e.slowT=slow;
+  if(e.hp<=0)killEnemy(e);
+}
+function killEnemy(e){
+  if(e.dead)return;e.dead=true;e.dt=0;e.t=0;e.st='death';kills++;
+  const d=ED[e.k];
+  if(d.boss){say('¡REY ZAPALLO DERROTADO!',4);shake(1);spriteFx('zapallo_02',e.x,e.y-40,.5,2.4,1.1);puff(e.x,e.y-50,16,'rgba(150,255,90,',80);}
+  else if(e.k==='tomate')puff(e.x,e.y-30,6,'rgba(255,60,40,',20);
+  else puff(e.x,e.y-30,5,'rgba(160,230,100,',20);
+}
+function enemyAt(r,x0){for(const e of enemies)if(!e.dead&&e.row===r&&e.x>x0-20&&e.x<W+10)return true;return false;}
+
+function spawnEnemy(k,row,x){
+  const d=ED[k];if(row===undefined){do{row=Math.floor(Math.random()*ROWS);}while(row===WV.lastRow&&Math.random()<.7);}
+  WV.lastRow=row;
+  const e={k,row,x:x===undefined?W+70:x,y:rowY(row),hp:d.hp,max:d.hp,st:'walk',t:rnd(0,1),ev:0,hitT:0,slowT:0,dead:false,dt:0,
+    seed:Math.random()*6,sx:W+70,cdA:rnd(1,3),cdB:rnd(3,6),dash:0,spdMul:1,lunge:0};
+  if(k==='zapallo'){e.cdA=4;e.phase=1;}
+  enemies.push(e);return e;
+}
+function frontUnit(e,reach){
+  let best=null;
+  for(const u of units){if(u.row!==e.row||u.dying)continue;const dx=e.x-u.x;
+    if(dx>-20&&dx<reach&&(!best||u.x>best.x))best=u;}
+  return best;
+}
+function unitAhead(e,cells){
+  let best=null;
+  for(const u of units){if(u.row!==e.row||u.dying)continue;const dx=e.x-u.x;
+    if(dx>0&&dx<cells*CWID&&(!best||u.x>best.x))best=u;}
+  return best;
+}
+
+/* ---------- colocar conejos ---------- */
+function place(i,r,c){
+  const k=ORDER[i],d=UD[k];
+  if(grid[r][c]||carrots<d.cost||cds[i]>0)return false;
+  carrots-=d.cost;cds[i]=d.cd;
+  const u={k,row:r,col:c,x:colX(c),y:rowY(r),hp:d.hp,max:d.hp,st:'idle',t:rnd(0,1),ev:0,hitT:0,shake:0,stun:0,cdT:d.rate?rnd(.2,.8):0,
+    prodT:k==='granjero'?6:0,dying:false,dt:0,ph:rnd(0,6)};
+  if(k==='huevo')setState(u,'special');
+  grid[r][c]=u;units.push(u);
+  puff(u.x,u.y,5,'rgba(120,80,40,',24);
+  return true;
+}
+
+/* ---------- proyectiles ---------- */
+function fireShot(u,kind){
+  const d=UD[u.k],p=PJ[kind];
+  projs.push({own:true,kind,row:u.row,x:u.x+d.mz[0],y:u.y+d.mz[1],d:0,delay:0,rot:0,dead:false});
+}
+function enemyShot(e,kind,delay,tx){
+  const d=ED[e.k];
+  projs.push({own:false,kind,row:e.row,x:e.x-60,y:d.fly?e.y-85:e.y-50,d:0,delay:delay||0,rot:0,dead:false,tx:tx});
+}
+function fallSpore(x,y){ // esporas del jefe: aterrizan en una celda
+  projs.push({own:false,kind:'fall',x,y:y-520,gy:y-20,vy:0,row:Math.floor((y-GTOP)/RH),dead:false,delay:rnd(0,.7),life:0,rot:0});
+  pushFx({k:'mark',x,y,life:1.3});
+}
+function updProj(p,dt){
+  if(p.delay>0){p.delay-=dt;return;}
+  if(p.kind==='fall'){
+    p.vy+=1500*dt;p.y+=p.vy*dt;
+    if(p.y>=p.gy){
+      p.dead=true;ring(p.x,p.gy+10,70,'rgba(120,255,60,',.4);puff(p.x,p.gy,6,'rgba(110,200,60,',30);
+      for(const u of units)if(!u.dying&&Math.abs(u.x-p.x)<CWID*.6&&Math.abs(u.y-(p.gy+20))<RH*.6)dmgUnit(u,60);
+    }
+    return;
+  }
+  if(p.own){
+    const d=PJ[p.kind];p.x+=d.v*dt;p.d+=d.v*dt;
+    p.arc=d.arc?d.arc*Math.sin(clamp(p.d/700,0,1)*Math.PI):0;
+    p.rot+=(d.spin||0)*dt;
+    if(p.x>W+60){p.dead=true;return;}
+    for(const e of enemies){
+      if(e.dead||e.row!==p.row)continue;
+      if(p.x>e.x-ED[e.k].hw-8&&p.x<e.x+ED[e.k].hw){
+        dmgEnemy(e,d.dmg,true,d.slow);p.dead=true;
+        if(p.kind==='snow'){spriteFx('esquimal_09',p.x,p.y-p.arc,.35,.7,.35);sparks(p.x,p.y,6,'#bfe9ff');}
+        else if(p.kind==='carrot'){sparks(p.x,p.y-p.arc,7,'#ff9a3c');}
+        else if(p.kind==='bullet'){sparks(p.x,p.y,5,'#ffd34d');}
+        else sparks(p.x,p.y-p.arc,4,'#ddd');
+        break;
+      }
+    }
+  }else{
+    const v=p.kind==='grain'?520:430;
+    p.x-=v*dt;p.d+=v*dt;
+    if(p.kind==='spore'){p.y+=60*dt;}
+    if(p.x<GX0-200){p.dead=true;return;}
+    for(const u of units){
+      if(u.dying||u.row!==p.row)continue;
+      if(Math.abs(p.x-u.x)<42){dmgUnit(u,p.kind==='grain'?9:13);p.dead=true;sparks(p.x,p.y,4,p.kind==='grain'?'#ffd34d':'#9cff5a');break;}
+    }
+  }
+}
+
+/* ---------- conejos: lógica ---------- */
+function updUnit(u,dt){
+  const d=UD[u.k];
+  if(u.dying){u.dt+=dt;return;}
+  u.t+=dt;u.hitT=Math.max(0,u.hitT-dt);u.shake=Math.max(0,u.shake-dt);u.stun=Math.max(0,u.stun-dt);
+  if(u.stun>0)return;
+  if(u.k==='granjero'){
+    u.prodT-=dt;
+    if(u.prodT<=0){
+      u.prodT=10;
+      toks.push({kind:'basket',x:u.x+20,y:u.y-90,vx:rnd(25,55),vy:-340,ty:u.y-10,v:25,life:12,fly:0,rest:false});
+      ring(u.x+10,u.y-80,50,'rgba(255,220,80,',.4);
+    }
+  }else if(d.shots){
+    u.cdT-=dt;
+    if(u.st==='idle'){if(u.cdT<=0&&enemyAt(u.row,u.x))setState(u,'attack');}
+    else if(u.st==='attack'){
+      const f=frameOf(d,u);
+      while(u.ev<d.shots.length&&f.fi>=d.shots[u.ev].at){fireShot(u,d.shots[u.ev].kind);u.ev++;}
+      if(f.done){setState(u,'idle');u.cdT=d.rate;}
+    }
+  }else if(u.k==='huevo'){
+    if(u.t>=1.0)explodeEgg(u);
+  }else if(u.k==='martillazo'){
+    u.cdT-=dt;
+    if(u.st==='idle'){
+      if(u.cdT<=0){const t=hammerTarget(u);if(t){u.tgtE=t;setState(u,'windup');}}
+    }else if(u.st==='windup'){
+      if(frameOf(d,u).done){setState(u,'throw');
+        const t=u.tgtE&&!u.tgtE.dead?u.tgtE:hammerTarget(u);
+        const tx=t?clamp(t.x-ED[t.k].sp_*CWID*.9,u.x+40,W-40):u.x+CWID*3;
+        projs.push({own:true,kind:'hammer',row:u.row,x:u.x+60,sx:u.x+60,tx,y:u.y-90,t:0,T:Math.max(.55,Math.abs(tx-u.x)/620),dead:false,delay:0,rot:0,src:u});
+      }
+    }else if(u.st==='throw'){
+      if(u.t>.35)setState(u,'rec');
+    }else if(u.st==='rec'){
+      if(frameOf(d,u).done){setState(u,'idle');u.cdT=.4;}
+    }
+  }
+}
+function hammerTarget(u){
+  let best=null;
+  for(const e of enemies){if(e.dead||e.row!==u.row)continue;
+    if(e.x>u.x+40&&e.x<u.x+UD.martillazo.range*CWID+60&&(!best||e.x<best.x))best=e;}
+  return best;
+}
+function explodeEgg(u){
+  const cx=u.x,cy=u.y-40;
+  spriteFx('huevo_10',cx,u.y+14,.5,1.15,.55);
+  spriteFx('huevo_09',cx,cy,.6,1.6,.35);
+  for(const n of [11,12,13,14,15,16,17,18])pushFx({k:'sprite',name:nm('huevo',n),x:cx+rnd(-30,30),y:cy+rnd(-30,30),s0:1,s1:.4,life:.5,rot:0,vx:rnd(-380,380),vy:rnd(-380,-60)});
+  ring(cx,u.y,150,'rgba(255,200,60,',.5);shake(.35);
+  for(const e of enemies){
+    if(e.dead)continue;
+    const dx=e.x-cx,dy=(e.row-u.row)*RH;
+    if(Math.hypot(dx,dy)<CWID*1.55)dmgEnemy(e,e.k==='zapallo'?260:1000,false);
+  }
+  u.dying=true;u.dt=0;u.egg=true;grid[u.row][u.col]=null;
+}
+function updHammer(p,dt){ // martillo gigante lanzado
+  p.t+=dt;const k=clamp(p.t/p.T,0,1);
+  p.x=p.sx+(p.tx-p.sx)*k;
+  p.y=(p.src.y-90)*(1-k)+(rowY(p.row)-20)*k-Math.sin(k*Math.PI)*260;
+  p.rot=k*Math.PI*3.2;
+  if(k>=1){
+    p.dead=true;
+    spriteFx('huevo_10',p.tx,rowY(p.row)+6,.25,.55,.35);
+    puff(p.tx,rowY(p.row),9,'rgba(140,100,60,',50);ring(p.tx,rowY(p.row),95,'rgba(255,230,160,',.35);shake(.22);
+    for(const e of enemies){if(e.dead||e.row!==p.row)continue;
+      if(Math.abs(e.x-p.tx)<ED[e.k].hw+78)dmgEnemy(e,e.k==='zapallo'?240:190,false);}
+  }
+}
+
+/* ---------- vegetales: lógica ---------- */
+function updEnemy(e,dt){
+  const d=ED[e.k];
+  if(e.dead){e.dt+=dt;e.t+=dt;if(e.dt>d.deathTime)e.remove=true;return;}
+  e.t+=dt;e.hitT=Math.max(0,e.hitT-dt);e.slowT=Math.max(0,e.slowT-dt);e.cdA-=dt;e.cdB-=dt;
+  let spd=d.sp_*CWID*(e.slowT>0?.5:1);
+  const meleeTarget=d.reach>0&&!d.fly?frontUnit(e,d.reach):null;
+
+  /* --- comportamientos especiales --- */
+  if(e.k==='choclo'){
+    const tg=unitAhead(e,d.range);
+    if(e.st==='attack'){
+      const f=frameOf(d,e);
+      if(e.ev<1&&f.fi>=3){e.ev=1;enemyShot(e,'grain',0);enemyShot(e,'grain',.13);enemyShot(e,'grain',.26);}
+      if(f.done){setState(e,'idle');e.cdA=2.6;}
+      return;
+    }
+    if(tg){if(e.st!=='idle')setState(e,'idle');if(e.cdA<=0)setState(e,'attack');return;}
+    if(e.st!=='walk')setState(e,'walk');
+    e.x-=spd*dt;
+  }
+  else if(e.k==='lechuga'){
+    const tg=unitAhead(e,d.range);
+    if(e.st==='attack'){
+      const f=frameOf(d,e);
+      if(e.ev<1&&e.t>.4){e.ev=1;enemyShot(e,'spore',0);enemyShot(e,'spore',.16);enemyShot(e,'spore',.32);}
+      if(e.t>1.1){setState(e,'walk');e.cdA=4;}
+      return;
+    }
+    if(tg&&e.cdA<=0)setState(e,'attack');
+    else{if(e.st!=='walk')setState(e,'walk');e.x-=spd*dt;}
+  }
+  else if(e.k==='cebolla'){
+    const near=unitAhead(e,d.gasRange);
+    if(e.st==='special'){
+      if(e.ev<1&&e.t>1.0){
+        e.ev=1;fxGas(e.x-30,e.y);
+      }
+      if(e.t>1.3){setState(e,'idle');e.cdB=5;}
+      return;
+    }
+    if(near||meleeTarget){
+      if(e.st!=='idle')setState(e,'idle');
+      if(e.cdB<=0)setState(e,'special');
+      return;
+    }
+    if(e.st!=='walk')setState(e,'walk');
+    e.x-=spd*dt;
+  }
+  else if(e.k==='tomate'){
+    if(e.st==='ignite'){
+      if(e.t>.6)explodeTomato(e);
+      return;
+    }
+    if(meleeTarget){setState(e,'ignite');return;}
+    e.spdMul=1+clamp((W+70-e.x)/(CWID*7),0,1.2);
+    e.x-=spd*e.spdMul*dt;
+  }
+  else if(e.k==='aji'){
+    if(meleeTarget){
+      if(e.st!=='attack')setState(e,'attack');
+      const an=d.anim.attack,n=an.f.length,p=e.t*an.fps;
+      if(e.nextHit===undefined)e.nextHit=d.hitIdx;
+      if(p>=e.nextHit){dmgUnit(meleeTarget,d.dmg);e.nextHit+=n;e.x+=18;}
+    }else{
+      e.dash-=dt;
+      if(e.dash<=0&&e.cdB<=0){e.dash=.8;e.cdB=rnd(3.5,5.5);setState(e,'dash');}
+      if(e.dash>0){e.x-=spd*2.5*dt;}
+      else{if(e.st!=='walk')setState(e,'walk');e.x-=spd*dt;}
+    }
+  }
+  else if(e.k==='brocoli'){
+    if(e.st==='special'){
+      if(e.ev<1&&e.t>.7){e.ev=1;shockwave(e,2.3,45,2);}
+      if(e.t>1.3){setState(e,'walk');e.cdB=10;}
+      return;
+    }
+    if(meleeTarget){
+      if(e.cdB<=0){setState(e,'special');return;}
+      if(e.st!=='attack')setState(e,'attack');
+      const an=d.anim.attack,n=an.f.length,p=e.t*an.fps;
+      if(e.nextHit===undefined)e.nextHit=d.hitIdx;
+      if(p>=e.nextHit){dmgUnit(meleeTarget,d.dmg);e.nextHit+=n;puff(meleeTarget.x+30,e.y,4,'rgba(130,100,60,',22);shake(.1);}
+    }else{if(e.st!=='walk')setState(e,'walk');e.x-=spd*dt;}
+  }
+  else if(e.k==='zapallo'){bossAI(e,dt,spd,meleeTarget);}
+  else{ /* papa, beterraga: cuerpo a cuerpo */
+    if(meleeTarget){
+      if(e.st!=='attack')setState(e,'attack');
+      const an=d.anim.attack,n=an.f.length,p=e.t*an.fps;
+      if(e.nextHit===undefined)e.nextHit=d.hitIdx;
+      if(p>=e.nextHit){dmgUnit(meleeTarget,d.dmg);e.nextHit+=n;if(e.k==='beterraga')e.x+=12;}
+    }else{if(e.st!=='walk')setState(e,'walk');e.x-=spd*dt;}
+  }
+
+  /* --- bola de alambre / zanahorias --- */
+  const w=wire[e.row];
+  if(e.x-d.hw*.6<GX0-10&&w.st==='idle'){w.st='roll';w.hit=new Set();say('¡Bola de alambre!',1.2);}
+  if(e.x<150&&S==='play'){S='lose';lockUntil=Date.now()+900;}
+}
+function fxGas(x,y){
+  fxs.push({k:'gas',x,y,t:0,life:4.2,row:Math.floor((y-FOOT-GTOP)/RH),done:0});
+}
+function explodeTomato(e){
+  e.dead=true;e.dt=0;e.t=0;e.st='death';e.exploded=true;kills++;
+  const cx=e.x,cy=e.y-40;
+  spriteFx('huevo_10',cx,e.y+10,.4,.9,.5);spriteFx('aji_00',cx,cy,.5,1.2,.45);ring(cx,e.y,140,'rgba(255,90,50,',.45);shake(.3);
+  for(const u of units){
+    if(u.dying)continue;
+    if(Math.hypot(u.x-cx,(u.row-e.row)*RH)<CWID*1.3)dmgUnit(u,190);
+  }
+}
+function shockwave(e,cells,dmg,stun){
+  const cx=e.x-40;
+  ring(cx,e.y,cells*CWID*.8,'rgba(255,240,180,',.6);ring(cx,e.y,cells*CWID*.5,'rgba(255,180,90,',.45);puff(cx,e.y,10,'rgba(150,110,60,',70);shake(.4);
+  for(const u of units){
+    if(u.dying)continue;
+    if(Math.abs(u.row-e.row)<=1&&Math.abs(u.x-cx)<cells*CWID){dmgUnit(u,dmg);u.stun=Math.max(u.stun,stun);}
+  }
+}
+function bossAI(e,dt,spd,tgt){
+  const d=ED.zapallo;const rage=e.hp<d.hp*.5;
+  if(rage&&e.phase===1){e.phase=2;say('¡REY ZAPALLO ENFURECIDO!',3);shake(.6);e.cdA=1.2;}
+  const sp=spd*(rage?1.6:1),cd=rage?3:5;
+  if(e.st==='attack'){
+    if(e.ev<1&&e.t>.55){e.ev=1;shockwave(e,2.6,110,1.6);}
+    if(e.t>1.1){setState(e,'walk');e.cdB=rage?1.6:2.4;}return;
+  }
+  if(e.st==='spores'){
+    if(e.ev<1&&e.t>.6){e.ev=1;spriteFx('zapallo_02',e.x-70,e.y-70,.4,1.2,.5);
+      const n=rage?8:5;for(let i=0;i<n;i++){fallSpore(colX(Math.floor(rnd(0,COLS-.01))),rowY(Math.floor(rnd(0,ROWS))));}}
+    if(e.t>1.3){setState(e,'walk');e.cdA=cd;}return;
+  }
+  if(e.st==='summon'){
+    if(e.ev<1&&e.t>.8){e.ev=1;
+      const pool=['papa','aji','choclo','beterraga','tomate'];const n=rage?3:2;
+      for(let i=0;i<n;i++){const k=pool[Math.floor(Math.random()*pool.length)];const row=clamp(e.row+Math.floor(rnd(-2,3)),0,ROWS-1);
+        const s=spawnEnemy(k,row,e.x-rnd(20,160));s.cdA=2;puff(s.x,s.y-30,6,'rgba(110,230,70,',30);}
+      ring(e.x-40,e.y,170,'rgba(110,255,80,',.6);}
+    if(e.t>1.6){setState(e,'walk');e.cdA=cd+1;}return;
+  }
+  if(tgt&&e.cdB<=0){setState(e,'attack');return;}
+  if(e.cdA<=0){setState(e,Math.random()<.5?'spores':'summon');return;}
+  if(e.st!=='walk')setState(e,'walk');
+  if(!tgt)e.x-=sp*dt;
+}
+
+/* ---------- oleadas ---------- */
+const BOSS_T=190;
+function pickEnemy(t){
+  const r=Math.random();
+  if(t<35)return 'papa';
+  if(t<65)return r<.65?'papa':'choclo';
+  if(t<100)return r<.3?'papa':r<.5?'choclo':r<.75?'aji':'tomate';
+  if(t<140)return r<.2?'papa':r<.35?'choclo':r<.5?'aji':r<.65?'tomate':r<.82?'beterraga':'cebolla';
+  return r<.12?'papa':r<.24?'choclo':r<.36?'aji':r<.48?'tomate':r<.62?'beterraga':r<.76?'cebolla':r<.94?'lechuga':'brocoli';
+}
+function bigWave(list){say('¡OLEADA GRANDE!',3);shake(.3);list.forEach((k,i)=>WV.q.push({at:TG+i*.65,k}));}
+function updWaves(dt){
+  TG+=dt;
+  WV.skyT-=dt;
+  WV.q=WV.q.filter(o=>{if(TG>=o.at){spawnEnemy(o.k);return false;}return true;});
+  if(WV.skyT<=0){WV.skyT=rnd(7.5,10.5);toks.push({kind:'sky',x:rnd(GX0+60,GX0+COLS*CWID-60),y:-40,ty:rnd(GTOP+90,GTOP+RH*ROWS-60),vx:0,vy:0,v:25,life:13,fly:0,rest:false});}
+  if(!WV.boss){
+    WV.next-=dt;
+    if(WV.next<=0){spawnEnemy(pickEnemy(TG));WV.next=Math.max(3.4,10-TG*.032)*rnd(.75,1.25);}
+    if(!WV.big[0]&&TG>=95){WV.big[0]=true;bigWave(['papa','choclo','aji','tomate','papa']);}
+    if(!WV.big[1]&&TG>=150){WV.big[1]=true;bigWave(['beterraga','cebolla','brocoli','aji','lechuga','tomate','choclo','papa']);}
+    if(TG>=BOSS_T){WV.boss=true;WV.bossRef=spawnEnemy('zapallo',2);say('¡LLEGA EL REY ZAPALLO!',4);shake(.8);WV.next=9;}
+  }else{
+    WV.next-=dt;
+    if(WV.next<=0&&WV.bossRef&&!WV.bossRef.dead){spawnEnemy(["papa","aji","choclo"][Math.floor(Math.random()*3)]);WV.next=15;}
+  }
+}
+
+/* ---------- bola de alambre ---------- */
+function updWire(dt){
+  wire.forEach((w,r)=>{
+    if(w.st!=='roll')return;
+    const sp=640;w.x+=sp*dt;w.rot+=sp*dt/46;
+    for(const e of enemies){
+      if(e.dead||e.row!==r||w.hit.has(e))continue;
+      if(Math.abs(e.x-w.x)<ED[e.k].hw+55){
+        w.hit.add(e);
+        dmgEnemy(e,ED[e.k].boss?900:99999,false);
+        sparks(w.x+40,e.y-40,9,'#e4e8f0');shake(.15);
+      }
+    }
+    if(w.x>W+120)w.st='gone';
+  });
+}
+
+/* ---------- fichas ---------- */
+const CARD={x0:190,w:130,h:112,gap:8,y:14};
+function cardRect(i){return {x:CARD.x0+i*(CARD.w+CARD.gap),y:CARD.y,w:CARD.w,h:CARD.h};}
+function pointer(x,y){
+  if(S==='menu'){if(Date.now()>lockUntil)reset();return;}
+  if(S==='win'||S==='lose'){if(Date.now()>=lockUntil)reset();return;}
+  if(S!=='play')return;
+  // zanahorias flotantes
+  for(let i=toks.length-1;i>=0;i--){
+    const t=toks[i];if(t.fly)continue;
+    if(Math.hypot(x-t.x,y-t.y)<48){t.fly=.001;t.fx=t.x;t.fy=t.y;return;}
+  }
+  // fichas
+  for(let i=0;i<ORDER.length;i++){
+    const r=cardRect(i);
+    if(x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h){
+      const d=UD[ORDER[i]];
+      if(cds[i]<=0&&carrots>=d.cost)sel=(sel===i?null:i);
+      return;
+    }
+  }
+  const c=Math.floor((x-GX0)/CWID),r=Math.floor((y-GTOP)/RH);
+  if(sel!==null&&c>=0&&c<COLS&&r>=0&&r<ROWS){place(sel,r,c);}
+  sel=null;
+}
+C.addEventListener('pointerdown',e=>{e.preventDefault();const p=toL(e);mouse=p;pointer(p.x,p.y);});
+C.addEventListener('pointermove',e=>{mouse=toL(e);});
+function toL(e){const r=C.getBoundingClientRect();return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};}
+window.addEventListener('keydown',e=>{
+  if(S!=='play')return;
+  if(e.key==='Escape'){sel=null;return;}
+  const i=parseInt(e.key,10)-1;
+  if(i>=0&&i<ORDER.length&&cds[i]<=0&&carrots>=UD[ORDER[i]].cost)sel=(sel===i?null:i);
+});
+
+/* ---------- update general ---------- */
+function update(dt){
+  if(S==='menu'||S==='loading'){TG+=dt;return;}
+  if(S!=='play'){fxs.forEach(f=>f.t+=dt);return;}
+  cds=cds.map(c=>Math.max(0,c-dt));
+  if(hint>0)hint-=dt;
+  if(bannerT>0)bannerT-=dt;
+  if(shakeT>0)shakeT-=dt;
+  updWaves(dt);
+  units.forEach(u=>updUnit(u,dt));
+  enemies.forEach(e=>updEnemy(e,dt));
+  projs.forEach(p=>p.kind==='hammer'?updHammer(p,dt):updProj(p,dt));
+  updWire(dt);
+  // zanahorias
+  toks.forEach(t=>{
+    t.life-=dt;
+    if(t.fly){
+      t.fly+=dt*2.2;const k=clamp(t.fly,0,1),e=k*k*(3-2*k);
+      t.x=t.fx+(95-t.fx)*e;t.y=t.fy+(66-t.fy)*e;
+      if(k>=1){carrots+=t.v;t.done=true;}
+    }else if(t.kind==='basket'){
+      t.vy+=900*dt;t.x+=t.vx*dt;t.y+=t.vy*dt;
+      if(t.y>=t.ty&&t.vy>0){t.y=t.ty;t.vy=0;t.vx=0;}
+    }else{
+      if(t.y<t.ty)t.y=Math.min(t.ty,t.y+80*dt);
+    }
+  });
+  toks=toks.filter(t=>!t.done&&(t.fly||t.life>0));
+  // gas
+  fxs.forEach(f=>{
+    f.t+=dt;
+    if(f.k==='gas'){
+      f.done+=dt;
+      if(f.done>=.5){f.done=0;
+        for(const u of units){if(u.dying)continue;
+          if(Math.abs(u.row-f.row)<=1&&Math.abs(u.x-f.x)<CWID*1.5)dmgUnit(u,7);}
+      }
+    }else if(f.k==='puff'||f.k==='spark'||f.k==='debris'||(f.k==='sprite'&&f.vx!==undefined)){
+      f.x+=(f.vx||0)*dt;f.y+=(f.vy||0)*dt;
+      if(f.k==='spark'||f.k==='debris'||f.k==='sprite')f.vy=(f.vy||0)+(f.k==='puff'?0:700)*dt;
+    }
+  });
+  fxs=fxs.filter(f=>f.t<f.life);
+  projs=projs.filter(p=>!p.dead);
+  units=units.filter(u=>!(u.dying&&u.dt>.01)||false);
+  enemies=enemies.filter(e=>!e.remove);
+  // victoria
+  if(WV.boss&&WV.bossRef&&WV.bossRef.dead&&WV.bossRef.dt>2.4&&S==='play'){S='win';lockUntil=Date.now()+900;}
+}
+
+/* ============================ DIBUJO ============================ */
+function drawUnit(u){
+  const d=UD[u.k];
+  if(u.dying)return;
+  const fr=frameOf(d,u);
+  let ox=0;
+  if(u.shake>0)ox=(Math.random()-.5)*7;
+  if(u.k==='huevo')ox=(Math.random()-.5)*(3+u.t*8);
+  const stun=u.stun>0;
+  shadow(u.x,u.y,u.k==='jaula'?58:46);
+  let tint=null;
+  if(u.hitT>0)tint=['#ffffff',.5];
+  else if(stun)tint=['#9aa6ff',.35];
+  else if(u.k==='huevo'&&u.t>.3&&Math.floor(u.t*14)%2)tint=['#ff5a3a',.5];
+  let sy=1;
+  if(u.k==='granjero'&&u.prodT<1)sy=1+Math.sin(u.prodT*Math.PI*8)*.03;
+  spr(fr.name,u.x+ox,u.y,d.sc*sy,{tint});
+  if(u.k==='granjero'&&u.prodT<1.0){
+    g.save();g.globalAlpha=.45*(1-u.prodT);g.fillStyle='#ffe066';g.beginPath();g.arc(u.x-30,u.y-62,34,0,7);g.fill();g.restore();
+  }
+  if(u.hp<u.max){hpBar(u.x,u.y-(u.k==='jaula'?128:136),u.hp/u.max);}
+  if(stun){txt('✦',u.x,u.y-150,28,'#c6d0ff');}
+}
+function hpBar(x,y,k){
+  g.fillStyle='rgba(0,0,0,.55)';rr(x-24,y,48,8,4);g.fill();
+  g.fillStyle=k>.5?'#69db4f':k>.25?'#f5c93b':'#ef4a3a';rr(x-23,y+1,Math.max(2,46*k),6,3);g.fill();
+}
+function drawEnemy(e){
+  const d=ED[e.k];
+  let y=e.y,x=e.x;
+  if(e.dead){
+    if(e.exploded)return;
+    const fadeStart=d.deathTime*.55;
+    const a=clamp(1-(e.dt-fadeStart)/(d.deathTime-fadeStart),0,1);
+    shadow(x,y,40*d.sc*.8);
+    if(d.anim.death){
+      const fr=frameOf(d,{st:'death',t:e.dt});
+      spr(fr.name,x,y,d.sc,{a});
+    }else spr(nm(d.sp,d.anim.walk.f[0]),x,y,d.sc,{a});
+    return;
+  }
+  const fr=frameOf(d,e);
+  const bob=Math.sin(TG*8+e.seed)*(d.fly?7:2);
+  let off=0;
+  if(d.fly){off=-62;shadow(x,y,34*d.sc*.8);}
+  else shadow(x,y,(d.boss?110:d.sc*30)+(e.k==='tomate'?8:0));
+  let tint=null;
+  if(e.hitT>0)tint=['#ffffff',.55];
+  else if(e.slowT>0)tint=['#7fd0ff',.38];
+  else if(e.k==='zapallo'&&e.phase===2)tint=['#ff3b2a',.22+.12*Math.sin(TG*9)];
+  else if(e.st==='ignite'&&Math.floor(e.t*16)%2)tint=['#ffe14d',.5];
+  let sx=x,sc=d.sc;
+  if(e.k==='tomate'&&e.st==='walk'){ /* rueda */ }
+  spr(fr.name,sx,y+bob+off,sc,{tint});
+  if(e.slowT>0&&A.esquimal_11){spr('esquimal_11',x,y+6,.38,{a:.8});}
+  if(e.hp<e.max){const w=d.boss?1:0;hpBar(x,y-(d.boss?260:d.sc*86)-(d.fly?60:0),e.hp/e.max);}
+}
+function drawProj(p){
+  if(p.delay>0)return;
+  if(p.kind==='hammer'){
+    g.save();g.translate(p.x,p.y);g.rotate(p.rot);
+    // martillo gigante de madera
+    g.fillStyle='#8a5a2b';rr(-5,-6,12,92,4);g.fill();
+    const gr=g.createLinearGradient(-44,0,44,0);gr.addColorStop(0,'#a8692c');gr.addColorStop(.5,'#d4934a');gr.addColorStop(1,'#8d561f');
+    g.fillStyle=gr;rr(-46,-52,92,58,12);g.fill();g.strokeStyle='#5a3414';g.lineWidth=4;g.stroke();
+    g.fillStyle='rgba(60,30,10,.55)';g.fillRect(-46,-36,92,5);g.fillRect(-46,-14,92,5);
+    g.restore();return;
+  }
+  if(p.kind==='fall'){
+    spr('lechuga_06',p.x,p.y,1.2,{a:.95});return;
+  }
+  if(p.own){
+    const d=PJ[p.kind];shadow(p.x,rowY(p.row)-6,12);
+    spr(d.sp,p.x,p.y-(p.arc||0),d.sc,{rot:p.rot});
+  }else{
+    if(p.kind==='grain')spr(p.d%40<20?'choclo_03':'choclo_04',p.x,p.y,1.1);
+    else spr('lechuga_0'+(2+Math.floor(p.d/30)%3),p.x,p.y,.9);
+  }
+}
+function drawFx(f){
+  const k=f.t/f.life;
+  if(f.k==='ring'){g.strokeStyle=f.col+(1-k)+')';g.lineWidth=10*(1-k)+2;g.beginPath();g.ellipse(f.x,f.y,f.r*k,f.r*k*.4,0,0,7);g.stroke();}
+  else if(f.k==='puff'){g.fillStyle=f.col+(.5*(1-k))+')';g.beginPath();g.arc(f.x,f.y,f.r*(1+k),0,7);g.fill();}
+  else if(f.k==='spark'){g.fillStyle=f.col;g.globalAlpha=1-k;g.beginPath();g.arc(f.x,f.y,3.2,0,7);g.fill();g.globalAlpha=1;}
+  else if(f.k==='sprite'){spr(f.name,f.x,f.y,f.s0+(f.s1-f.s0)*k,{a:1-k*k,rot:f.rot*k});}
+  else if(f.k==='debris'){spr(f.name,f.x,f.y,.55,{a:1-k*k,rot:f.rot*f.t});}
+  else if(f.k==='mark'){g.strokeStyle='rgba(120,255,60,'+(.8*(1-k*.5))+')';g.lineWidth=5;g.beginPath();g.ellipse(f.x,f.y,48*(1-k*.4),19*(1-k*.4),0,0,7);g.stroke();}
+  else if(f.k==='gas'){
+    const a=Math.min(1,f.t*2.5)*Math.min(1,(f.life-f.t)*1.2);
+    for(let i=0;i<7;i++){
+      const ang=i*1.1+f.t*.8,rx=Math.cos(ang)*CWID*.8*(i%3)/2.2,ry=Math.sin(ang)*30;
+      g.fillStyle='rgba(130,225,40,'+(.28*a)+')';g.beginPath();g.ellipse(f.x+rx,f.y-45+ry,74,48,0,0,7);g.fill();
+    }
+    if(A.cebolla_02)spr('cebolla_02',f.x+Math.sin(f.t*3)*20,f.y-55,2.6,{a:.55*a});
+  }
+}
+function drawTok(t){
+  const a=t.fly?1:(t.life<3?(.55+.45*Math.sin(t.life*10)):1);
+  if(t.kind==='basket'){
+    g.save();g.globalAlpha=.35*a;g.fillStyle='#ffe066';g.beginPath();g.arc(t.x,t.y-24,44+Math.sin(TG*6)*3,0,7);g.fill();g.restore();
+    spr('granjero_15',t.x,t.y,.95,{a});
+  }else{
+    g.save();g.globalAlpha=.3*a;g.fillStyle='#fff3a0';g.beginPath();g.arc(t.x,t.y,40+Math.sin(TG*6+t.x)*3,0,7);g.fill();g.restore();
+    spr('lanzazanahorias_12',t.x,t.y,.82,{a,rot:Math.sin(TG*3+t.x)*.5});
+  }
+}
+function drawWire(){
+  wire.forEach((w,r)=>{
+    if(w.st==='gone')return;
+    const y=ROWC[r]+36;
+    if(w.st==='idle'){shadow(w.x,y+34,52);spr('wire',w.x,y+36,.7,{rot:0});}
+    else{shadow(w.x,y+34,52);spr('wire',w.x,y,.7,{rot:w.rot});}
+  });
+}
+function drawHUD(){
+  // barra de madera translúcida
+  g.fillStyle='rgba(54,34,14,.78)';rr(10,8,W-20,138,22);g.fill();
+  g.strokeStyle='rgba(255,215,130,.55)';g.lineWidth=3;rr(10,8,W-20,138,22);g.stroke();
+  // contador de zanahorias
+  g.fillStyle='rgba(20,60,20,.9)';rr(22,20,158,114,16);g.fill();g.strokeStyle='rgba(255,255,255,.25)';g.lineWidth=2;g.stroke();
+  spr('lanzazanahorias_06',54,112,.5);
+  txt(String(Math.floor(carrots)),126,100,38,'#ffd96a','center','#3a2205');
+  txt('ZANAHORIAS',100,34,13,'#cfe8c0','center',null,500);
+  // fichas
+  ORDER.forEach((k,i)=>{
+    const d=UD[k],r=cardRect(i);
+    const ok=carrots>=d.cost&&cds[i]<=0;
+    g.fillStyle=sel===i?'#6b4a1d':'rgba(255,240,200,.14)';rr(r.x,r.y,r.w,r.h,14);g.fill();
+    g.strokeStyle=sel===i?'#ffe066':'rgba(255,215,130,.5)';g.lineWidth=sel===i?4:2;g.stroke();
+    g.save();rr(r.x,r.y,r.w,r.h,14);g.clip();
+    const fm=A[nm(d.sp,d.anim.idle.f[0])];
+    const s=Math.min(.7,54/fm[3],100/fm[2]);
+    spr(nm(d.sp,d.anim.idle.f[0]),r.x+r.w/2,r.y+84,s);
+    g.restore();
+    txt(d.name,r.x+r.w/2,r.y+13,13,'#fff4d6','center',null,600);
+    txt(String(d.cost),r.x+r.w/2+10,r.y+r.h-15,22,ok?'#ffd96a':'#ff8a80','center','#2d1a05');
+    spr('lanzazanahorias_12',r.x+r.w/2-22,r.y+r.h-11,.34);
+    txt(String(i+1),r.x+13,r.y+r.h-14,13,'rgba(255,255,255,.55)','center',null,500);
+    if(!ok){
+      g.fillStyle='rgba(15,10,5,.55)';rr(r.x,r.y,r.w,r.h,14);g.fill();
+      if(cds[i]>0){g.fillStyle='rgba(15,10,5,.5)';g.save();rr(r.x,r.y,r.w,r.h,14);g.clip();g.fillRect(r.x,r.y,r.w,r.h*Math.min(1,cds[i]/d.cd));g.restore();}
+    }
+  });
+  // progreso
+  const px=1332,pw=262;
+  const pr=WV&&WV.boss?1:clamp(TG/BOSS_T,0,1);
+  txt(WV&&WV.boss?'¡JEFE FINAL!':'Avance de la invasión',px+pw/2,28,15,'#ffe9b0','center',null,600);
+  g.fillStyle='rgba(0,0,0,.45)';rr(px,44,pw,20,10);g.fill();
+  g.fillStyle=WV&&WV.boss?'#e84a2b':'#7bd34a';rr(px,44,Math.max(20,pw*pr),20,10);g.fill();
+  [95/BOSS_T,150/BOSS_T].forEach(m=>txt('🚩',px+pw*m,54,16));
+  txt('👑',px+pw-6,54,20);
+  txt('🥬 Eliminados: '+kills,px+pw/2,92,17,'#fff4d6','center',null,600);
+  txt('IAMASTER',px+pw/2,122,13,'rgba(255,230,170,.55)','center',null,600);
+}
+function drawBanner(){
+  if(bannerT<=0)return;
+  const a=clamp(bannerT*2,0,1);
+  g.save();g.globalAlpha=a;
+  txt(banner,W/2,GTOP+RH*2.5,64,'#fff3b0','center','#b3261e');
+  g.restore();
+}
+function drawGhost(){
+  if(sel===null)return;
+  const c=Math.floor((mouse.x-GX0)/CWID),r=Math.floor((mouse.y-GTOP)/RH);
+  if(c<0||c>=COLS||r<0||r>=ROWS)return;
+  const ok=!grid[r][c];
+  g.fillStyle=ok?'rgba(255,240,120,.28)':'rgba(255,60,60,.25)';
+  rr(GX0+c*CWID+4,GTOP+r*RH+4,CWID-8,RH-8,14);g.fill();
+  if(ok){const k=ORDER[sel],d=UD[k];spr(nm(d.sp,d.anim.idle.f[0]),colX(c),rowY(r),d.sc,{a:.62});}
+}
+
+function draw(){
+  g.clearRect(0,0,W,H);
+  g.save();
+  if(shakeT>0&&S==='play')g.translate(rnd(-6,6)*Math.min(1,shakeT*2),rnd(-5,5)*Math.min(1,shakeT*2));
+  if(BGI.complete&&BGI.naturalWidth)g.drawImage(BGI,0,0,W,H);else{g.fillStyle='#2f8f2f';g.fillRect(0,0,W,H);}
+  if(S==='loading'){
+    g.restore();
+    txt('Cargando...',W/2,H/2,50,'#fff','center','#143');
+    if(loaded>=2&&IMG.naturalWidth){S='menu';TG=0;}
+    return;
+  }
+  if(S==='menu'){drawMenu();g.restore();return;}
+  drawWire();
+  // personajes ordenados por fila
+  const list=[];
+  units.forEach(u=>list.push({y:u.y,f:()=>drawUnit(u)}));
+  enemies.forEach(e=>list.push({y:e.y+(ED[e.k].fly?200:0)+(e.dead?-60:0),f:()=>drawEnemy(e)}));
+  list.sort((a,b)=>a.y-b.y);
+  list.forEach(o=>o.f());
+  fxs.filter(f=>f.k==='gas').forEach(drawFx);
+  projs.forEach(drawProj);
+  fxs.filter(f=>f.k!=='gas').forEach(drawFx);
+  toks.forEach(drawTok);
+  drawGhost();
+  g.restore();
+  drawHUD();
+  drawBanner();
+  if(hint>0&&S==='play'){
+    g.save();g.globalAlpha=clamp(hint/2,0,1);
+    txt('Toca las zanahorias 🥕, elige un conejo y colócalo en el huerto',W/2,GTOP+RH*ROWS+70,30,'#fff','center','#2b4a12');g.restore();
+  }
+  if(S==='win'||S==='lose')drawEnd();
+}
+function drawMenu(){
+  g.fillStyle='rgba(8,30,8,.55)';g.fillRect(0,0,W,H);
+  const t=TG;
+  // conejos (izquierda) y vegetales (derecha)
+  const L=[['granjero',0,330,'idle'],['resortero',0,470,'idle'],['sargento',0,610,'idle'],['martillazo',0,750,'idle'],['esquimal',0,890,'idle']];
+  const R=[['papa',1330,330],['choclo',1470,470],['tomate',1330,610],['brocoli',1480,750],['cebolla',1340,890]];
+  [[190,330,'granjero',[0,1,2,3,4,3,2,1],8,1.25],[330,480,'resortero',IDLE5,8,1.25],[190,640,'sargento',[0,1,2,3,4,5,6,5,4,3,2,1],8,1.25],[340,790,'martillazo',[0],1,1.15],[200,920,'esquimal',[0,1,2,1],6,1.25]].forEach(([x,y,sp,f,fps,sc])=>{
+    shadow(x,y,60);spr(nm(sp,f[Math.floor(t*fps)%f.length]),x,y,sc);});
+  [[1430,340,'papa',[5,6,7,8,9,10,11,12,13,14],11,1.5],[1290,480,'choclo',[5,7,10,11,12,14,15],10,1.45],[1440,630,'tomate',[3,4,5,6,7,8,9,10,11,12,13],14,1.7],[1330,790,'brocoli',[8,9,10,11,12,13],7,1.7],[1450,920,'cebolla',[9,10,11,12,13,14],8,1.7]].forEach(([x,y,sp,f,fps,sc])=>{
+    shadow(x,y,60);spr(nm(sp,f[Math.floor(t*fps)%f.length]),x,y,sc);});
+  g.fillStyle='rgba(30,16,4,.55)';rr(450,135,720,270,44);g.fill();
+  txt('CONEJOS',W/2,222,112,'#ffe28a','center','#6a3a06');
+  txt('vs VEGETALES',W/2,325,78,'#9ff06a','center','#1e5a10');
+  txt('¡Defiende tu huerto de los vegetales infectados!',W/2,445,34,'#ffffff','center','#2b4a12',600);
+  const pulse=1+Math.sin(t*4)*.04;
+  g.save();g.translate(W/2,540);g.scale(pulse,pulse);g.fillStyle='#f4902a';rr(-170,-44,340,88,44);g.fill();g.strokeStyle='#fff3c8';g.lineWidth=5;g.stroke();
+  txt('▶  JUGAR',0,2,52,'#fff','center','#8a3f06');g.restore();
+  txt('Toca para empezar',W/2,616,26,'#e8ffd0','center',null,500);
+  g.fillStyle='rgba(30,16,4,.6)';rr(560,660,500,120,24);g.fill();
+  txt('Cómo se juega',W/2,688,26,'#ffe28a','center',null,700);
+  txt('1 · Recoge las zanahorias 🥕',W/2,722,23,'#fff','center',null,500);
+  txt('2 · Elige un conejo y colócalo en el huerto',W/2,750,23,'#fff','center',null,500);
+  txt('Próximamente: ¡Misión Cura! (aventura de acción)',W/2,880,28,'#ffd0a0','center','#4a2208',600);
+  txt('Juego creado por IAMASTER',W/2,925,20,'rgba(255,255,255,.7)','center',null,500);
+}
+function drawEnd(){
+  g.fillStyle='rgba(8,20,8,.72)';g.fillRect(0,0,W,H);
+  if(S==='win'){
+    const t=TG;
+    g.save();g.translate(W/2,330+Math.sin(t*3)*8);
+    spr('lanzazanahorias_06',0,60,2.6,{tint:['#ffd400',.75]});g.restore();
+    txt('¡VICTORIA!',W/2,170,100,'#ffe066','center','#7a4a05');
+    txt('Rey Zapallo derrotado · ¡Conseguiste la Zanahoria Dorada!',W/2,480,40,'#fff','center','#2b4a12');
+    txt('Eliminaste '+kills+' vegetales infectados',W/2,540,32,'#d8f5b0','center',null,600);
+  }else{
+    txt('¡Los vegetales llegaron a tus zanahorias!',W/2,330,64,'#ff9a8a','center','#5a1208');
+    txt('Eliminaste '+kills+' vegetales infectados',W/2,410,34,'#fff','center',null,600);
+  }
+  txt('Toca para jugar de nuevo',W/2,650,40,'#ffe28a','center','#4a2a05');
+}
+
+/* ---------- bucle ---------- */
+let last=0;
+function frame(ts){
+  const dt=Math.min(1/20,(ts-last)/1000||0);last=ts;
+  update(dt);draw();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ---------- ganchos para pruebas ---------- */
+window.__G={reset,update,draw,pointer,place,spawnEnemy,
+  st:()=>({S,TG,carrots,kills,units:units&&units.length,enemies:enemies&&enemies.length,boss:WV&&WV.boss}),
+  get units(){return units},get enemies(){return enemies},get wire(){return wire},set TG(v){TG=v},get toks(){return toks},ORDER,UD,ED,
+  setCarrots:v=>{carrots=v},clearCds:()=>{cds=cds.map(()=>0)}};
+
+/* ---------- PWA ---------- */
+try{if('serviceWorker' in navigator&&location.protocol==='https:'&&window.top===window)navigator.serviceWorker.register('sw.js');}catch(e){}
+/* ---------- pantalla completa ---------- */
+(function(){
+  const b=document.getElementById('fs'),el=document.documentElement;
+  const req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  const ex=document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen;
+  const standalone=navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches;
+  if(standalone){b.style.display='none';return;}
+  if(!req){
+    const o=document.getElementById('ios');
+    b.addEventListener('click',e=>{e.stopPropagation();o.style.display='flex';});
+    b.addEventListener('pointerdown',e=>e.stopPropagation());
+    document.getElementById('iosx').addEventListener('click',()=>{o.style.display='none';});
+    return;
+  }
+  const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+  function toggle(){
+    try{
+      if(!isFS()){
+        const p=req.call(el);
+        const lock=()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{});}catch(e){}};
+        if(p&&p.then)p.then(lock).catch(()=>{});else lock();
+      }else{ex.call(document);}
+    }catch(e){}
+  }
+  function upd(){b.textContent=isFS()?'✕':'⛶';}
+  b.addEventListener('click',e=>{e.stopPropagation();toggle();});
+  b.addEventListener('pointerdown',e=>e.stopPropagation());
+  document.addEventListener('fullscreenchange',upd);document.addEventListener('webkitfullscreenchange',upd);
+  addEventListener('keydown',e=>{if(e.key==='f'||e.key==='F')toggle();});
+})();
+</script>
+</body>
+</html>
