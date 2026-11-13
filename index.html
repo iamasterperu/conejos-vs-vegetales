@@ -134,9 +134,9 @@ const UD={
   resortero:{name:'Resortero',sp:'resortero',cost:100,cd:5,hp:100,fit:[120,138],rate:1.5,mz:[52,-92],
     anim:{idle:{f:[0,0,1,0],fps:4},attack:{f:[1,2,3,4,5],fps:13,loop:false}},shots:[{at:4,kind:'stone'}],
     desc:'Dispara piedras con su resortera a los vegetales de su fila. Es tu defensa básica.'},
-  jaula:{name:'Conejo en Jaula de Acero',sp:'jaula',cost:50,cd:12,hp:850,fit:[120,138],
+  jaula:{name:'Conejo en Jaula de Acero',sp:'jaula',cost:50,cd:12,hp:1800,fit:[120,138],
     anim:{idle:{f:[0],fps:1}},
-    desc:'Es un escudo: los vegetales lo golpean a él antes de llegar a tus conejos. Mientras más daño recibe, más se rompe su jaula.'},
+    desc:'Es un escudo: los vegetales lo golpean a él antes de llegar a tus conejos. Aguanta muchísimo, y mientras más daño recibe, más se rompe su jaula.'},
   sargento:{name:'Sargento Orejas',sp:'sargento',cost:200,cd:8,hp:100,fit:[128,138],rate:2.5,mz:[74,-68],
     anim:{idle:{f:[0,1,2,1],fps:6},attack:{f:[3,4,3,5,6],fps:12,loop:false}},shots:[{at:0,kind:'bullet'},{at:2,kind:'bullet'}],
     desc:'Dispara ráfagas rápidas con su escopeta de cuatro cañones. Hace mucho daño en su fila.'},
@@ -149,33 +149,33 @@ const UD={
   huevo:{name:'Huevo de Pascua',sp:'huevo',cost:125,cd:25,hp:100,fit:[120,138],
     anim:{idle:{f:[0,1,2,1],fps:5},special:{f:[3,4,3,4],fps:10}},
     desc:'Explota a los pocos segundos de colocarlo y destruye a todos los vegetales cercanos. Se usa una sola vez.'},
-  francotirador:{name:'Francotirador Camuflado',sp:'francotirador',cost:175,cd:10,hp:90,fit:[150,138],rate:6,mz:[100,-78],
+  francotirador:{name:'Conejo Francotirador',sp:'francotirador',cost:175,cd:10,hp:90,fit:[150,138],rate:6,mz:[100,-78],
     anim:{idle:{f:[0,1,2,3],fps:4},attack:{f:[4,5,5,3],fps:8,loop:false}},
-    desc:'Dispara muy lento, pero apunta al vegetal más fuerte de todo el huerto, sin importar la fila, y le hace muchísimo daño.'},
+    desc:'Dispara muy lento, pero a cualquier enemigo de la pantalla y con mucho daño. Es ideal contra el jefe y las lechugas voladoras.'},
   bombero:{name:'Conejo Bombero',sp:'bombero',cost:150,cd:8,hp:110,fit:[135,138],
     anim:{idle:{f:[0],fps:1},spray:{f:[1,2,3,4,3,4,3,4],fps:9}},
-    desc:'Su manguera moja toda la fila: hace daño constante, frena a los vegetales y apaga a los Tomates y Ajíes en llamas.'},
-  abeja:{name:'Conejo Apicultor',sp:'abeja',cost:150,cd:9,hp:90,fit:[130,138],rate:6,
+    desc:'Su manguera moja toda la fila y apaga al Tomate y al Ají en llamas, y además frena a los vegetales que caminan.'},
+  abeja:{name:'Conejo Abeja',sp:'abeja',cost:150,cd:9,hp:90,fit:[130,138],rate:6,
     anim:{idle:{f:[0,1,2,3,4],fps:5},attack:{f:[5,5,5],fps:6,loop:false}},
-    desc:'Suelta abejas que persiguen al vegetal con más vida, sin importar la fila, y lo pican.'},
+    desc:'Suelta un enjambre que persigue al enemigo con más vida y lo pica sin parar. No importa en qué fila esté.'},
   espantapajaros:{name:'Conejo Espantapájaros',sp:'espantapajaros',cost:125,cd:15,hp:650,fit:[125,138],
     anim:{idle:{f:[0,1,2,3,4,5,6],fps:5}},
-    desc:'Muy resistente: atrae a los vegetales de las filas vecinas para que lo ataquen a él y no a tus otros conejos.'},
+    desc:'Un conejo disfrazado, muy resistente, que atrae a todos los vegetales de las filas de al lado para que ataquen solo a él. Es el protector de tu defensa.'},
   cavador:{name:'Conejo Cavador',sp:'cavador',cost:100,cd:10,hp:110,fit:[125,110],
     anim:{idle:{f:[0,1,2,1],fps:4},dive:{f:[2,3],fps:8,loop:false},under:{f:[3],fps:1},pop:{f:[4,5,6,7],fps:9,loop:false},back:{f:[3],fps:1}},
-    desc:'Se esconde bajo tierra y sale de golpe bajo el primer vegetal que se acerca, lanzándolo por los aires con su pala.'},
+    desc:'Se esconde bajo el huerto y aparece de golpe bajo el primer vegetal que llega, lo lanza por los aires y se vuelve a enterrar. Sirve para vegetales fuertes en una sola fila.'},
   ingeniero:{name:'Conejo Ingeniero',sp:'ingeniero',cost:100,cd:12,hp:100,fit:[130,120],
     anim:{idle:{f:[0,1],fps:3},plant:{f:[1,2,3,4],fps:6,loop:false}},
-    desc:'Entierra trampas de púas delante de él. Los vegetales que las pisan reciben daño y quedan atrapados.'},
+    desc:'Pone trampas de alambre de púas en el suelo, delante de él. Los vegetales que las pisan quedan atrapados unos segundos y se hieren.'},
   tambor:{name:'Conejo Tambor',sp:'tambor',cost:125,cd:10,hp:100,fit:[130,138],
     anim:{idle:{f:[0,1,2,3,4,5],fps:6}},
-    desc:'Con su ritmo, los conejos de su fila y de las filas vecinas actúan más rápido: disparan y producen más rápido.'},
+    desc:'Su ritmo hace que los conejos de su fila disparen más rápido por unos segundos. No hace daño por sí mismo, pero multiplica el de los demás.'},
   ninja:{name:'Conejo Ninja',sp:'ninja',cost:125,cd:10,hp:100,fit:[130,138],
     anim:{idle:{f:[0,1,0,5],fps:4},leap:{f:[2,3],fps:10},slash:{f:[4],fps:1},back:{f:[3,2],fps:10}},
-    desc:'Salta detrás de un vegetal, lo ataca por la espalda con doble daño y regresa a su lugar.'},
+    desc:'Salta sobre los enemigos y se coloca detrás de ellos, y los ataca por la espalda con doble daño. Se mueve por la fila y no tiene un lugar fijo.'},
   chef:{name:'Conejo Chef',sp:'chef',cost:125,cd:10,hp:100,fit:[125,138],
     anim:{idle:{f:[0,1,2],fps:4},cook:{f:[3,4,5,6,5,4],fps:7,loop:false}},
-    desc:'Cocina zanahorias extra para ti, y los vegetales derrotados cerca de él te dan más zanahorias.'},
+    desc:'Convierte los vegetales derrotados en comida que te da zanahorias extra. Es otra forma de ganar recursos, distinta a la del granjero.'},
 };
 const ORDER=['granjero','resortero','jaula','sargento','martillazo','esquimal','huevo','francotirador','bombero','abeja','espantapajaros','cavador','ingeniero','tambor','ninja','chef'];
 for(const k of ORDER){const d=UD[k];const fm=A[nm(d.sp,d.anim.idle.f[0])];d.sc=Math.min(d.fit[0]/fm[2],d.fit[1]/fm[3]);d.k=k;}
@@ -238,19 +238,26 @@ const NLV=LV.length;
 
 /* ---------- progreso ---------- */
 let prog={won:0,tut:false};
-try{const s=JSON.parse(localStorage.getItem('cvv2')||'null');if(s){prog.won=clamp(s.won|0,0,NLV);prog.tut=!!s.tut;if(s.voice===false)voiceOn=false;}}catch(e){}
-function save(){try{localStorage.setItem('cvv2',JSON.stringify({won:prog.won,tut:prog.tut,voice:voiceOn}));}catch(e){}}
+try{const s=JSON.parse(localStorage.getItem('cvv2')||'null');if(s){prog.won=clamp(s.won|0,0,NLV);prog.tut=!!s.tut;if(Array.isArray(s.deck))deck=s.deck.filter(v=>Number.isInteger(v)&&v>=0&&v<16);if(s.voice===false)voiceOn=false;}}catch(e){}
+function save(){try{localStorage.setItem('cvv2',JSON.stringify({won:prog.won,tut:prog.tut,voice:voiceOn,deck}));}catch(e){}}
 const nUnlocked=()=>Math.min(ORDER.length,3+prog.won);
 
 /* ---------- estado ---------- */
 let S='loading',units,enemies,projs,toks,fxs,wire,grid,carrots,sel,cds,shakeT,banner,bannerT,kills,lockUntil=0;
-let TG=0,WV,LVN=0,traps=[],tut=null,almSel=-1,collected=0,pausedFrom='',lastHint=0;
+let deck=[],pickMsg=-1,TG=0,WV,LVN=0,traps=[],tut=null,almSel=-1,collected=0,pausedFrom='',lastHint=0;
 let mouse={x:0,y:0};
 const L=()=>LV[LVN];
-const cardsList=()=>ORDER.slice(0,nUnlocked());
+function fixDeck(){if(window.__nolim)return;
+  const n=nUnlocked();deck=deck.filter((v,i)=>v<n&&deck.indexOf(v)===i);
+  if(n<=6)deck=Array.from({length:n},(_,i)=>i);
+  else if(!deck.length)deck=[0,1,2,3,4,5];
+  deck=deck.slice(0,6);
+}
+const cardsList=()=>deck.map(i=>ORDER[i]);
 
 function reset(n){
   if(n!==undefined)LVN=clamp(n,0,NLV-1);
+  fixDeck();
   S='play';units=[];enemies=[];projs=[];toks=[];fxs=[];traps=[];sel=null;kills=0;shakeT=0;collected=0;
   grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));
   carrots=150+25*Math.min(LVN,8);cds=ORDER.map(()=>0);
@@ -322,7 +329,7 @@ function unitAhead(e,cells){
 /* ---------- colocar conejos ---------- */
 function place(i,r,c){
   const k=ORDER[i],d=UD[k];
-  if(i>=nUnlocked()||grid[r][c]||carrots<d.cost||cds[i]>0)return false;
+  if(!deck.includes(i)||grid[r][c]||carrots<d.cost||cds[i]>0)return false;
   carrots-=d.cost;cds[i]=d.cd;
   const u={k,row:r,col:c,x:colX(c),y:rowY(r),hp:d.hp,max:d.hp,st:'idle',t:rnd(0,1),ev:0,hitT:0,shake:0,stun:0,cdT:d.rate?rnd(.2,.8):(k==='cavador'||k==='ninja'?1:0),
     prodT:k==='granjero'?6:k==='chef'?5:k==='ingeniero'?1.5:0,dying:false,dt:0,ox:0,oy:0,flip:false,traps:0};
@@ -343,7 +350,7 @@ function topEnemy(){ // el vegetal con más vida visible
 }
 function enemyShot(e,kind,delay){
   const d=ED[e.k];
-  projs.push({own:false,kind,row:e.row,x:e.x-60,y:d.fly?e.y-85:e.y-50,d:0,delay:delay||0,rot:0,dead:false});
+  projs.push({own:false,kind,row:e.row,x:e.x-30,y:d.fly?e.y-85:e.y-50,d:0,delay:delay||0,rot:0,dead:false});
 }
 function fallSpore(x,y){
   projs.push({own:false,kind:'fall',x,y:y-520,gy:y-20,vy:0,row:rowAt(y),dead:false,delay:rnd(0,.7),life:0,rot:0});
@@ -388,10 +395,12 @@ function updProj(p,dt){
     p.x-=v*dt;p.d+=v*dt;
     if(p.kind==='spore'){p.y+=60*dt;}
     if(p.x<GX0-200){p.dead=true;return;}
+    let fu=null;
     for(const u of units){
-      if(u.dying||u.under||u.away||u.row!==p.row)continue;
-      if(Math.abs(p.x-u.x)<42){dmgUnit(u,p.kind==='grain'?9:13);p.dead=true;sparks(p.x,p.y,4,p.kind==='grain'?'#ffd34d':'#9cff5a');break;}
+      if(u.dying||u.under||u.away||u.row!==p.row||u.x>p.x+60)continue;
+      if(!fu||u.x>fu.x)fu=u;
     }
+    if(fu&&p.x-fu.x<46){dmgUnit(fu,p.kind==='grain'?9:13);p.dead=true;sparks(p.x,p.y,4,p.kind==='grain'?'#ffd34d':'#9cff5a');}
   }
 }
 
@@ -426,6 +435,8 @@ function updUnit(u,dt,buf){
       while(u.ev<d.shots.length&&f.fi>=d.shots[u.ev].at){fireShot(u,d.shots[u.ev].kind);u.ev++;}
       if(f.done){setState(u,'idle');u.cdT=d.rate;}
     }
+  }else if(u.k==='tambor'){
+    const on=(u.t%11)<5;if(on&&!u.beat)ring(u.x,u.y-40,110,'rgba(255,220,120,',.5);u.beat=on;
   }else if(u.k==='huevo'){
     if(u.t>=1.3)explodeEgg(u);
   }else if(u.k==='martillazo'){
@@ -450,7 +461,7 @@ function updUnit(u,dt,buf){
       const f=frameOf(d,u);
       if(u.ev<1&&f.fi>=1){u.ev=1;const t=u.tgtE&&!u.tgtE.dead?u.tgtE:topEnemy();
         const mx=u.x+d.mz[0],my=u.y+d.mz[1];
-        if(t){pushFx({k:'beam',x:mx,y:my,x2:t.x,y2:t.y-55,life:.18});dmgEnemy(t,ED[t.k].boss?150:260,true);sparks(t.x,t.y-55,8,'#ffd34d');}
+        if(t){pushFx({k:'beam',x:mx,y:my,x2:t.x,y2:t.y-55,life:.18});dmgEnemy(t,220,true);sparks(t.x,t.y-55,8,'#ffd34d');}
         pushFx({k:'puff',x:mx,y:my,vx:10,vy:-20,r:10,col:'rgba(255,230,160,',life:.3});}
       if(f.done){setState(u,'idle');u.cdT=d.rate;}
     }
@@ -570,12 +581,12 @@ function updEnemy(e,dt){
   if(e.dead){e.dt+=dt;e.t+=dt;if(e.dt>d.deathTime)e.remove=true;return;}
   e.t+=dt;e.hitT=Math.max(0,e.hitT-dt);e.slowT=Math.max(0,e.slowT-dt);e.rootT=Math.max(0,e.rootT-dt);e.trapT=Math.max(0,(e.trapT||0)-dt);e.wetT=Math.max(0,e.wetT-dt);e.cdA-=dt;e.cdB-=dt;
   e.y+=(rowY(e.row)-e.y)*Math.min(1,dt*6);
-  let spd=d.sp_*CWID*(e.slowT>0?.5:1)*(e.rootT>0?0:1);
+  let spd=d.sp_*CWID*.78*(e.slowT>0?.5:1)*(e.rootT>0?0:1);
   const meleeTarget=d.reach>0&&!d.fly?frontUnit(e,d.reach):null;
   /* espantapájaros: atrae a los vegetales de filas vecinas */
   if(!d.boss&&!d.fly&&!e.taunted&&e.x<W-60)for(const u of units){
     if(u.k!=='espantapajaros'||u.dying||Math.abs(u.row-e.row)!==1)continue;
-    if(e.x>u.x&&e.x-u.x<CWID*3){e.row=u.row;e.taunted=true;puff(e.x,e.y-40,4,'rgba(255,220,120,',14);break;}
+    if(e.x>u.x){e.row=u.row;e.taunted=true;puff(e.x,e.y-40,4,'rgba(255,220,120,',14);break;}
   }
   if(e.k==='choclo'){
     const tg=e.x<1560?unitAhead(e,d.range):null;
@@ -791,8 +802,10 @@ function startLevel(n){
   LVN=clamp(n,0,NLV-1);
   if(L().newE&&LVN===prog.won){
     reset(LVN);silence();S='brief';const e=ED[L().newE];speak('Nivel '+(LVN+1)+'. Nuevo vegetal: '+e.name+'. '+e.desc);
-  }else reset(LVN);
+  }else goPick();
 }
+function goPick(){fixDeck();if(nUnlocked()<=6)reset(LVN);else{S='pick';pickSel=-1;silence();}}
+let pickSel=-1;
 function toMenu(){S='menu';TG=0;silence();}
 function toggleVoice(){voiceOn=!voiceOn;if(!voiceOn)silence();save();}
 function pauseGame(){if(S==='play'){S='pause';silence();}}
@@ -801,7 +814,7 @@ let rsT=0;
 /* ---------- entrada ---------- */
 const CARD={y0:6,h:112};
 function cardGeom(){
-  const n=cardsList().length;const cw=clamp(Math.floor(1290/n)-5,76,126);
+  const n=cardsList().length;const cw=clamp(Math.floor(1290/n)-5,76,150);
   return {cw,gap:5,x0:166};
 }
 function cardRect(i){const q=cardGeom();return {x:q.x0+i*(q.cw+q.gap),y:CARD.y0,w:q.cw,h:CARD.h};}
@@ -814,9 +827,8 @@ function pointer(x,y){
     const t=toks[i];if(t.fly)continue;
     if(Math.hypot(x-t.x,y-t.y)<52){t.fly=.001;t.fx=t.x;t.fy=t.y;return;}
   }
-  const n=cardsList().length;
-  for(let i=0;i<n;i++){
-    const r=cardRect(i);
+  for(let j=0;j<deck.length;j++){
+    const i=deck[j],r=cardRect(j);
     if(x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h){
       const d=UD[ORDER[i]];
       if(cds[i]<=0&&carrots>=d.cost)sel=(sel===i?null:i);else if(sel===i)sel=null;
@@ -834,13 +846,14 @@ window.addEventListener('keydown',e=>{
   if(e.key==='p'||e.key==='P'){if(S==='play')pauseGame();else if(S==='pause')S='play';return;}
   if(e.key==='Escape'){if(S==='play'){if(sel!==null)sel=null;else pauseGame();}else if(S==='pause')S='play';return;}
   if(S!=='play')return;
-  const i=parseInt(e.key,10)-1;
-  if(i>=0&&i<cardsList().length&&cds[i]<=0&&carrots>=UD[ORDER[i]].cost)sel=(sel===i?null:i);
+  const j=parseInt(e.key,10)-1;const i=deck[j];
+  if(i!==undefined&&cds[i]<=0&&carrots>=UD[ORDER[i]].cost)sel=(sel===i?null:i);
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame();});
 
 /* ---------- update ---------- */
 function update(dt){
+  if(S==='pick'){TG+=dt;return;}
   if(S==='menu'||S==='loading'||S==='levels'||S==='alm'||S==='brief'||S==='unlock'||S==='win'||S==='lose'){TG+=dt;if(fxs)fxs.forEach(f=>f.t+=dt);return;}
   if(S!=='play')return;
   cds=cds.map(c=>Math.max(0,c-dt));
@@ -849,7 +862,7 @@ function update(dt){
   if(tut)tut.t+=dt;
   updWaves(dt);
   const buf=[1,1,1,1,1];
-  for(const u of units)if(u.k==='tambor'&&!u.dying)for(let r=Math.max(0,u.row-1);r<=Math.min(ROWS-1,u.row+1);r++)buf[r]=1.6;
+  for(const u of units)if(u.k==='tambor'&&!u.dying)if((u.t%11)<5)buf[u.row]=1.7;
   units.forEach(u=>updUnit(u,dt,buf[u.row]));
   enemies.forEach(e=>updEnemy(e,dt));
   projs.forEach(p=>p.kind==='hammer'?updHammer(p,dt):updProj(p,dt));
@@ -911,6 +924,7 @@ function drawUnit(u){
   if(u.k==='granjero'&&u.prodT<1&&u.st==='idle'){
     g.save();g.globalAlpha=.4*(1-u.prodT);g.fillStyle='#ffe066';g.beginPath();g.arc(u.x-10,u.y-80,36,0,7);g.fill();g.restore();
   }
+  if(u.k==='tambor'&&(u.t%11)<5){g.save();g.strokeStyle='rgba(255,220,120,.6)';g.lineWidth=4;const k=(u.t*2)%1;g.beginPath();g.ellipse(u.x,u.y-4,40+60*k,12+16*k,0,0,7);g.stroke();g.restore();}
   if(u.hp<u.max&&!u.under)hpBar(u.x+(u.ox||0),u.y-(d.fit[1]+8)+oy,u.hp/u.max);
   if(u.stun>0)txt('✦',u.x,u.y-d.fit[1]-12,28,'#c6d0ff');
 }
@@ -996,7 +1010,7 @@ function drawCard(i,k,r){
   const pulse=hl?(.5+.5*Math.sin(TG*8)):0;
   g.strokeStyle=sel===i||hl?'#ffe066':'rgba(255,215,130,.55)';g.lineWidth=sel===i?5:(hl?4+pulse*3:2);g.stroke();
   const f0=nm(d.sp,d.anim.idle.f[0]),fm=A[f0];
-  const s=Math.min((r.w-10)/fm[2],86/fm[3]);
+  const s=Math.min((r.w-10)/fm[2],88/fm[3]);
   g.save();rr(r.x,r.y,r.w,r.h,14);g.clip();
   spr(f0,r.x+r.w/2,r.y+90,s);
   g.restore();
@@ -1025,7 +1039,7 @@ function drawHUD(){
   g.fillStyle='rgba(20,60,20,.92)';rr(16,12,140,100,16);g.fill();g.strokeStyle='rgba(255,255,255,.25)';g.lineWidth=2;g.stroke();
   spr('granjero_03',50,66,.3);
   txt(String(Math.floor(carrots)),110,64,40,'#ffd96a','center','#3a2205');
-  cardsList().forEach((k,i)=>drawCard(i,k,cardRect(i)));
+  deck.forEach((i,j)=>drawCard(i,ORDER[i],cardRect(j)));
   btn(1468,14,56,56,'',()=>{pauseGame();},{bg:'#3b7ac4',bd:'#cfe6ff',r:14});iconPause(1468,14,56,56,false);
   btn(1534,14,56,56,'',()=>{if(Date.now()-rsT<2200){rsT=0;reset(LVN);}else{rsT=Date.now();}},{bg:Date.now()-rsT<2200?'#d24a2b':'#c06a1e',bd:'#ffe2b0',r:14});iconRestart(1534,14,56,56);
   if(Date.now()-rsT<2200)txt('¿Reiniciar? Toca otra vez',1500,92,17,'#ffd0c0','center','#4a1408',600);
@@ -1112,7 +1126,7 @@ function drawBrief(){
   txt(e.name,W/2+130,370,52,'#fff','center','#2b4a12');
   para(e.desc,W/2+130,440,640,32,42,'#fff4d6','center',500);
   btn(W/2-390,712,330,76,'🔊 Escuchar',()=>speak(e.name+'. '+e.desc),{size:32,bg:'#2f6a2f'});
-  btn(W/2+60,712,330,76,'¡Empezar!',()=>{silence();reset(LVN);},{size:36,bg:'#f4902a'});
+  btn(W/2+60,712,330,76,'¡Empezar!',()=>{silence();goPick();},{size:36,bg:'#f4902a'});
 }
 function drawUnlock(){
   overlay(.8);const k=g_unlock,d=UD[k];
@@ -1169,6 +1183,27 @@ function drawMenu(){
   txt('Próximamente: ¡Misión Cura! (aventura de acción)',W/2,925,26,'#ffd0a0','center','#4a2208',600);
   txt('Juego creado por IAMASTER',W/2,955,19,'rgba(255,255,255,.7)','center',null,500);
 }
+function drawPick(){
+  UI=[];g.fillStyle='rgba(8,30,8,.86)';g.fillRect(0,0,W,H);
+  txt('ELIGE TUS 6 CONEJOS',W/2,62,60,'#ffe28a','center','#6a3a06');
+  txt('Nivel '+(LVN+1)+'  ·  Elegidos: '+deck.length+' / 6',W/2,118,30,'#fff4d6','center',null,600);
+  const n=nUnlocked(),cw=170,ch=190,gp=12,per=8,x0=(W-(per*cw+(per-1)*gp))/2;
+  for(let i=0;i<n;i++){
+    const k=ORDER[i],d=UD[k],r=Math.floor(i/per),c=i%per,x=x0+c*(cw+gp),y=150+r*(ch+gp);
+    const on=deck.includes(i);
+    btn(x,y,cw,ch,'',()=>{pickSel=i;speak(d.name+'. '+d.desc);if(on)deck=deck.filter(v=>v!==i);else if(deck.length<6)deck.push(i);},{bg:on?'#2f7a3a':'rgba(255,240,200,.18)',bd:on?'#d8f5b0':'rgba(255,215,130,.55)',r:20,lw:on?6:3});
+    const f0=nm(d.sp,d.anim.idle.f[0]),fm=A[f0],s=Math.min((cw-16)/fm[2],(ch-44)/fm[3]);
+    spr(f0,x+cw/2,y+ch-34,s);
+    txt(String(d.cost),x+cw/2+10,y+ch-14,22,'#ffd96a','center','#2d1a05');spr('granjero_03',x+cw/2-22,y+ch-14,.1);
+    if(on)txt('✔',x+cw-22,y+24,34,'#fff','center','#1e5a10');
+  }
+  if(pickSel>=0){const d=UD[ORDER[pickSel]];
+    g.fillStyle='rgba(30,16,4,.88)';rr(150,590,1320,170,26);g.fill();g.strokeStyle='#ffd96a';g.lineWidth=4;g.stroke();
+    txt(d.name,W/2,630,40,'#ffe28a','center','#6a3a06');para(d.desc,W/2,685,1150,27,34,'#fff','center',500);
+  }else txt('Toca un conejo para elegirlo (verde) o quitarlo',W/2,680,32,'#fff4d6','center',null,500);
+  btn(W/2-420,800,300,76,'◀ Volver',()=>toMenu(),{size:32,bg:'#7a5a2a'});
+  btn(W/2-120,800,540,76,deck.length<1?'Elige al menos 1':'¡A jugar!  ('+deck.length+'/6)',()=>{if(deck.length){save();silence();reset(LVN);}},{size:34,bg:deck.length?'#f4902a':'#666'});
+}
 function drawLevels(){
   UI=[];g.fillStyle='rgba(8,30,8,.82)';g.fillRect(0,0,W,H);
   txt('ELIGE UN NIVEL',W/2,95,76,'#ffe28a','center','#6a3a06');
@@ -1219,6 +1254,7 @@ function draw(){
   if(S==='menu'){drawMenu();return;}
   if(S==='levels'){drawLevels();return;}
   if(S==='alm'){drawAlm();return;}
+  if(S==='pick'){drawPick();return;}
   if(!units){S='menu';return;}
   drawScene();
   drawHUD();drawBanner();if(S==='play')drawTut();
@@ -1242,7 +1278,7 @@ requestAnimationFrame(frame);
 window.__G={reset,update,draw,pointer,place,spawnEnemy,startLevel,winLevel,
   st:()=>({S,LVN,TG,carrots,kills,units:units&&units.length,enemies:enemies&&enemies.length,boss:WV&&WV.boss,won:prog.won,tut:tut&&tut.step}),
   get units(){return units},get enemies(){return enemies},get wire(){return wire},set TG(v){TG=v},get toks(){return toks},ORDER,UD,ED,LV,prog,
-  setS:v=>{S=v},setWon:v=>{prog.won=v},setCarrots:v=>{carrots=v},clearCds:()=>{cds=cds.map(()=>0)},get tut(){return tut},tutNext,tutSkip,get S(){return S},get g_unlock(){return g_unlock}};
+  setS:v=>{S=v},setDeck:a=>{deck=a},setWon:v=>{prog.won=v},setCarrots:v=>{carrots=v},clearCds:()=>{cds=cds.map(()=>0)},get tut(){return tut},tutNext,tutSkip,get S(){return S},get g_unlock(){return g_unlock}};
 
 /* ---------- PWA ---------- */
 try{if('serviceWorker' in navigator&&location.protocol==='https:'&&window.top===window)navigator.serviceWorker.register('sw.js');}catch(e){}
